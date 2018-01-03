@@ -1,9 +1,14 @@
 # votes
 Create database with historic local votes (gobernador, ayuntamiento, diputado local).
 
+
 -2009 records-onwards (some states hold their local elections at different periods/years).
+
 -Each state keeps track of its own records, eg. Coahuila: http://www.iec.org.mx/v1/index.php/estadisticas
+
 -Data is mostly crap - multiple municipal codes/names, party name conventions, etc. We already own a list of pretty much all (~100 or so missing) the names/codes/etc used by the INE (federal level). Open Refine is an alternative software to R or Python text mining tools.
+
 -Redistristaciones/reseccionaciones (altering the region associated with each electoral levels) happens every so often. So it's ok (actually expected) if codes differ each year for secciones/distritos.
+
 
 I will be uploading the code used for the historical INE votes for reference.
