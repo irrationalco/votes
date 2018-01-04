@@ -2,7 +2,7 @@
 
 # SETUP
 
-setwd('/Users/Franklin/R/api/votos')
+setwd('')
 options(scipen = 999)
 require(data.table)
 require(doBy)
