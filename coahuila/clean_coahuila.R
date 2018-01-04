@@ -1,4 +1,4 @@
-# Create database with historic (2009-2015) federal election votes.
+# Create Coahuila database with historic (2003-2017) local election votes.
 
 # SETUP
 #########
@@ -43,124 +43,129 @@ cleanText <- function(text)
 
 # Read files
 
-  ### 2009 - 2012
+ayu_13 <- read.xlsx('raw/ayu_2013.xlsx', 1)
+dil_14 <- read.xlsx('raw/dil_2014.xlsx', 1)
+ayu_17 <- read.xlsx('raw/ayu_2017.xlsx', 1)
+dil_17 <- read.xlsx('raw/dil_2017.xlsx', 1)
+gob_17 <- read.xlsx('raw/gob_2017.xlsx', 1)
 
-data_filenames <- list.files(path = 'raw', pattern = '*.txt') # Files
-data_path <- as.character('raw/')                             # Path
-data_files <- paste(data_path, data_filenames, sep = '')      # Files + Path
-data <- lapply(                                               # Path
-    data_files,
-    read.table,
-    header = TRUE,
-    stringsAsFactors = FALSE,
-    sep = '|',
-    encoding = 'latin1')                                      # Specific encoding
-typeof(data)                                                  # What do I hav here?
-str(data)                                                     # Structure
+  # Ayuntamiento 2013
+names(ayu_13) <- c(
+  'MUNICIPIO', 'DISTRITO_LOC', 'SECCION',
+  'PAN', 'PRI', 'PRD', 'PT', 'PVEM', 'PUDC', 'PMC', 'PNA', 'PSDC', 'PPC', 'PJ', 'PRC', 'PPRO',
+  'IND1_AYU13', 'IND2_AYU13', 'IND3_AYU13',
+  'VALIDOS', 'NULOS', 'TOTAL', 'NOMINAL')
+ayu_13$ANO <- as.factor('2013')
+ayu_13$ELECCION <- as.factor('ayu')
 
-# Colnames
+  # Diputado Local 2014
+names(dil_14) <- c(
+  'DISTRITO_LOC', 'MUNICIPIO_CODIGO', 'SECCION', 'NOMINAL',
+  'PAN', 'PRI', 'PTSC', 'PRD', 'PT', 'PVEM', 'PUDC', 'PMC', 'PNA', 'PSDC', 'PPC', 'PJ', 'PRC', 'PPRO', 'PCP',
+  'IND1_DIL14', 'IND2_DIL14',
+  'VALIDOS', 'NULOS', 'TOTAL')
+dil_14$ANO <- as.factor('2014')
+dil_14$ELECCION <- as.factor('dil')
 
-dat <- data
+  # 2017
+# Todas las columnas de coaliciones tienen al menos un voto
+# x <- ayu_17
+# x <- x[,apply(x,2,function(x) !all(x==0))]
 
-names(dat[[1]]) <- c(
-  'CIRC', 'CODIGO_ESTADO', 'ESTADO', 'DISTRITO_FED', 'CABECERA_FED', 'MUNICIPIO', 'SECCION', 'CASILLA',
-  'PAN', 'PRI', 'PRD', 'PVEM', 'PT', 'PCONV', 'PNA', 'PSD', 'PPM', 'PSM',
-  'NO_REG', 'NULOS', 'TOTAL', 'NOMINAL', 'ESTATUS', 'TPEJF')
-names(dat[[2]]) <- c(
-  'ESTADO', 'DISTRITO_FED', 'MUNICIPIO', 'SECCION', 'CASILLA',
-  'PAN', 'PRI', 'PRD', 'PVEM', 'PT', 'PMC', 'PNA',
-  'COA_PRI_PVEM', 'COA_PRD_PT_PMC', 'COA_PRD_PT', 'COA_PRD_PMC', 'COA_PT_PMC',
-  'NO_REG', 'NULOS', 'VALIDOS', 'TOTAL', 'TPEJF', 'OBS', 'RUTA', 'ESTATUS')
-names(dat[[3]]) <- c(
-  'ESTADO', 'DISTRITO_FED', 'MUNICIPIO', 'SECCION', 'CASILLA',
-  'PAN', 'PRI', 'PRD', 'PVEM', 'PT', 'PMC', 'PNA',
-  'COA_PRI_PVEM', 'COA_PRD_PT_PMC', 'COA_PRD_PT', 'COA_PRD_PMC', 'COA_PT_PMC',
-  'NO_REG', 'NULOS', 'VALIDOS', 'TOTAL', 'NOMINAL', 'TPEJF', 'OBS', 'RUTA', 'ESTATUS')
-names(dat[[4]]) <- c(
-  'ESTADO', 'DISTRITO_FED', 'MUNICIPIO', 'SECCION', 'CASILLA',
-  'PAN', 'PRI', 'PRD', 'PVEM', 'PT', 'PMC', 'PNA',
-  'COA_PRI_PVEM', 'COA_PRD_PT_PMC', 'COA_PRD_PT', 'COA_PRD_PMC', 'COA_PT_PMC',
-  'NO_REG', 'NULOS', 'VALIDOS', 'TOTAL', 'TPEJF', 'OBS', 'RUTA', 'ESTATUS')
+  # Ayuntamiento 2017
+names(ayu_17)[3:20] <- c(
+  'DISTRITO_LOC', 'CODIGO_MUNICIPIO', 'SECCION',
+  'PAN', 'PRI', 'PRD', 'PT', 'PVEM', 'PUDC', 'PMC', 'PNA', 'PSI', 'PPC', 'PJ', 'PRC', 'PCP', 'PMOR', 'PES')
 
-# ¿Cómo se llaman mis archivos?
-data_files
+    # Remove useless shit
+ayu_17 <- ayu_17 %>%
+  # Remove folios
+  select(-1, -2) %>%
+  # Aggregate coalitions to single party
+  mutate(PRI = rowSums(select(., starts_with('PRI-')))) %>%
+  mutate(PAN = rowSums(select(., starts_with('PAN-')))) %>%
+  mutate(UDC = rowSums(select(., starts_with('UDC-')))) %>%
+  mutate(PPC = rowSums(select(., starts_with('PPC-')))) %>%
+  mutate(PVEM = rowSums(select(., starts_with('PVEM-')))) %>%
+  mutate(PNA = rowSums(select(., starts_with('PNA-')))) %>%
+  # Reduce
+  select(1:18) %>%
+  # Add year
+  mutate(ANO = as.factor('2017')) %>%
+  # Add election
+  mutate(ELECCION = as.factor('ayu')) %>%
+  # Data frame
+  as.data.frame
 
-# Sabiendo esto, nombro columnas relevantes en secuencia
-ano <- as.factor(c('2009', '2012', '2012', '2012'))
-eleccion <- as.factor(c('dif', 'dif', 'prs', 'sen'))
+# Diputado Local 2017
+names(dil_17)[3:20] <- c(
+  'DISTRITO_LOC', 'CODIGO_MUNICIPIO', 'SECCION',
+  'PAN', 'PRI', 'PRD', 'PT', 'PVEM', 'PUDC', 'PMC', 'PNA', 'PSI', 'PPC', 'PJ', 'PRC', 'PCP', 'PMOR', 'PES')
 
-# Asigno las columnas anteriores
-dat <- mapply(cbind, dat, 'ANO' = ano, SIMPLIFY = F)
-dat <- mapply(cbind, dat, 'ELECCION' = eleccion, SIMPLIFY = F)
+    # Remove useless shit
+dil_17 <- dil_17 %>%
+  # Remove folios
+  select(-1, -2) %>%
+  # Aggregate coalitions to single party
+  mutate(PRI = rowSums(select(., starts_with('PRI-')))) %>%
+  mutate(PAN = rowSums(select(., starts_with('PAN-')))) %>%
+  mutate(UDC = rowSums(select(., starts_with('UDC-')))) %>%
+  mutate(PPC = rowSums(select(., starts_with('PPC-')))) %>%
+  mutate(PVEM = rowSums(select(., starts_with('PVEM-')))) %>%
+  mutate(PNA = rowSums(select(., starts_with('PNA-')))) %>%
+  # Reduce
+  select(1:18) %>%
+  # Add year
+  mutate(ANO = as.factor('2017')) %>%
+  # Add election
+  mutate(ELECCION = as.factor('dil')) %>%
+  # Data frame
+  as.data.frame
 
-# Junto todos los data frames en uno
-dat <- data.table::rbindlist(l = dat, use.names = TRUE, fill = TRUE)
+# Gobernador 2017
+names(gob_17)[3:20] <- c(
+  'DISTRITO_LOC', 'CODIGO_MUNICIPIO', 'SECCION',
+  'PAN', 'PRI', 'PRD', 'PT', 'PVEM', 'PUDC', 'PMC', 'PNA', 'PSI', 'PPC', 'PJ', 'PRC', 'PCP', 'PMOR', 'PES')
 
-  ### 2015
-
-dif <- read.xlsx('raw/ine_dif_2015.xlsx', 1)
-names(dif) <- c(
-  'CODIGO_ESTADO', 'DISTRITO_FED', 'SECCION', 'ID_CASILLA',
-  'TIPO_CASILLA', 'EXT_CONTIGUA', 'UBICACION_CASILLA', 'TIPO_ACTA', 'NUM_BOLETAS_SOBRANTES', 'TOTAL_CIUDADANOS_VOTARON', 'NUM_BOLETAS_EXTRAVIADAS',
-  'PAN', 'PRI', 'PRD', 'PVEM', 'PT', 'PMC', 'PNA', 'PMOR', 'PH', 'PS',
-  'COA_PRI_PVEM', 'COA_PRD_PT',
-  'IND1_DIF15', 'IND2_DIF15',
-  'NO_REG', 'NULOS', 'TOTAL', 'NOMINAL', 'OBS', 'CONTABILIZADA')
-dif$ANO <- as.factor('2015')
-dif$ELECCION <- as.factor('dif')
-dif[, 12:25] <- apply(dif[, 12:25], 2, function(x) gsub(' ', '0', x))
-dif[, 22:25] <- apply(dif[, 22:25], 2, function(x) gsub('-', NA, x))
-dif$PAN <- as.numeric(dif$PAN)
-dif$PRI <- as.numeric(dif$PRI)
-dif$PRD <- as.numeric(dif$PRD)
-dif$PVEM <- as.numeric(dif$PVEM)
-dif$PT <- as.numeric(dif$PT)
-dif$PMC <- as.numeric(dif$PMC)
-dif$PNA <- as.numeric(dif$PNA)
-dif$PMOR <- as.numeric(dif$PMOR)
-dif$PH <- as.numeric(dif$PH)
-dif$PS <- as.numeric(dif$PS)
-dif$COA_PRI_PVEM <- as.numeric(dif$COA_PRI_PVEM)
-dif$COA_PRD_PT <- as.numeric(dif$COA_PRD_PT)
-dif$IND1_DIF15 <- as.numeric(dif$IND1_DIF15)
-dif$IND2_DIF15 <- as.numeric(dif$IND2_DIF15)
-dif <- subset(dif,
-	select = c(
-		ANO, ELECCION,
-		CODIGO_ESTADO, DISTRITO_FED, SECCION,
-		PAN, PRI, PRD, PVEM, PT, PMC, PNA, PMOR, PH, PS,
-		COA_PRI_PVEM, COA_PRD_PT
-		)
-	)
+    # Remove useless shit
+gob_17 <- gob_17 %>%
+  # Remove folios
+  select(-1, -2) %>%
+  # Aggregate coalitions to single party
+  mutate(PRI = rowSums(select(., starts_with('PRI-')))) %>%
+  mutate(PAN = rowSums(select(., starts_with('PAN-')))) %>%
+  mutate(UDC = rowSums(select(., starts_with('UDC-')))) %>%
+  mutate(PPC = rowSums(select(., starts_with('PPC-')))) %>%
+  mutate(PVEM = rowSums(select(., starts_with('PVEM-')))) %>%
+  mutate(PNA = rowSums(select(., starts_with('PNA-')))) %>%
+  # Reduce
+  select(1:18) %>%
+  # Add year
+  mutate(ANO = as.factor('2017')) %>%
+  # Add election
+  mutate(ELECCION = as.factor('gob')) %>%
+  # Data frame
+  as.data.frame
 
   ### ALL
 
-mydat <- bind_rows(dat, dif)
+dat <- bind_rows(ayu_13, dil_14, ayu_17, dil_17, gob_17)
+dat$ESTADO <- as.character('coahuila')
+dat$MUNICIPIO <- cleanText(tolower(dat$MUNICIPIO))
+dat <- subset(dat, select = -c(TOTAL, NULOS))
 
-# CLEAN
-#########
-
-# Subset
-mydf <- subset(mydat,
-  select = -c(
-    CIRC, CABECERA_FED, ESTATUS, TPEJF, OBS, RUTA, NO_REG, NULOS, TOTAL, VALIDOS, CASILLA
-    )
-  )
-
-# Text
-mydf$ESTADO <- cleanText(tolower(mydf$ESTADO))
-mydf$MUNICIPIO <- cleanText(tolower(mydf$MUNICIPIO))
-
-# WRITE
-#########
-
-# Quick column cleanup
-df <- mydf %>%
-  select(noquote(order(colnames(mydf)))) %>%
+# Stuff
+df <- dat %>%
+  # Remove independents (we can infer the share out of the 'VALIDOS' count)
+  select(-matches('^IND')) %>%
+  # Remove electoral sections labeled '0'
+  filter(!grepl('^0', SECCION)) %>%
+  # Quick column cleanup
+  select(order(colnames(.))) %>%
   select(
-    ANO, ELECCION, CODIGO_ESTADO, ESTADO, MUNICIPIO, DISTRITO_FED, SECCION, NOMINAL,
+    ANO, ELECCION, ESTADO, CODIGO_MUNICIPIO, MUNICIPIO, DISTRITO_LOC, SECCION, NOMINAL,
     everything()) %>%
   arrange(ANO, ELECCION, ESTADO, SECCION)
 
 # Write
-write.csv(df, 'dat/ine.csv', row.names = F)
+write.csv(df, 'out/coahuila.csv', row.names = F)
