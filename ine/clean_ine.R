@@ -163,4 +163,4 @@ df <- mydf %>%
   arrange(ANO, ELECCION, ESTADO, SECCION)
 
 # Write
-write.csv(df, 'dat/ine.csv', row.names = F)
+write.csv(df, 'out/ine.csv', row.names = F)

@@ -151,4 +151,4 @@ df <- tbl %>%
     everything()) %>%
   arrange(ANO, ELECCION, CODIGO_ESTADO, SECCION)
 
-write.csv(df, 'dat/tbl_ine.csv', row.names = F)
+write.csv(df, 'dat/out_ine.csv', row.names = F)
