@@ -36,7 +36,7 @@ cleanText <- function(text) {
 # DATA
 
 # Read
-raw <- fread('dat/ine.csv', header = TRUE, sep = ',', stringsAsFactors = F)
+raw <- fread('out/ine.csv', header = TRUE, sep = ',', stringsAsFactors = F)
 
 # Transform
 data <- raw %>%

@@ -1,8 +1,8 @@
-# Summary table of historic (2009-2015) federal election votes.
+# Summary table of Coahuila historic (2013-2017) local election votes.
 
 # SETUP
 
-setwd('/Users/Franklin/R/api/votos')
+setwd('')
 options(scipen = 999)
 require(data.table)
 require(doBy)
@@ -19,6 +19,7 @@ cleanText <- function(text) {
   text <- str_replace_all(text, 'ó', 'o')
   text <- str_replace_all(text, 'ú', 'u')
   text <- str_replace_all(text, 'ü', 'u')
+  text <- str_replace_all(text, 'ñ', 'n')
   text <- str_replace_all(text, '\\.', '')
   text <- gsub('(?<=[\\s])\\s*|^\\s+|\\s+$', '', text, perl = TRUE)
     # checks for whitespace - deserves its own explanation:
@@ -36,33 +37,9 @@ cleanText <- function(text) {
 # DATA
 
 # Read
-raw <- fread('dat/ine.csv', header = TRUE, sep = ',', stringsAsFactors = F)
-
-# Transform
-data <- raw %>%
-	# Aggregate coalitions to single party
-	mutate(PRD	= rowSums(.[, c('PRD', 'COA_PRD_PMC', 'COA_PRD_PT', 'COA_PRD_PT_PMC')], na.rm = T)) %>%
-	mutate(PRI	= rowSums(.[, c('PRI', 'COA_PRI_PVEM')], na.rm = T)) %>%
-	mutate(PT	= rowSums(.[, c('PT', 'COA_PT_PMC')], na.rm = T)) %>%
-	# Remove individual coalitions
-	select(-matches('^COA_')) %>%
-	# Remove electoral sections '0'
-	filter(!grepl('^0', SECCION)) %>%
-	# Data frame
-  as.data.frame
+raw <- fread('out/coahuila.csv', header = TRUE, sep = ',', stringsAsFactors = F)
 
 # IDS
-
-	# State
-
-# Unique list of state ids
-est <- data %>% filter(ANO == 2009) %>% filter(ELECCION == 'dif') %>% select(CODIGO_ESTADO, ESTADO)
-est <- unique(est[c('CODIGO_ESTADO', 'ESTADO')])
-
-# Match according to dataset
-x <- data %>% filter(ANO == 2009)
-y <- data %>% filter(ANO == 2012) %>% select(-CODIGO_ESTADO) %>% left_join(., est)
-z <- data %>% filter(ANO == 2015) %>% select(-ESTADO) %>% left_join(., est)
 
 	# City
 
@@ -72,17 +49,58 @@ mun <- mun[[2]][[2]][[3]][[2]]
 names(mun) <- c('CODIGO_ESTADO', 'CODIGO_MUNICIPIO', 'MUNICIPIO_RAW')
 mun$MUNICIPIO <- cleanText(tolower(mun$MUNICIPIO_RAW))
 mun <- mun %>% select(-MUNICIPIO_RAW) %>% arrange(CODIGO_ESTADO, CODIGO_MUNICIPIO)
-#test <- subset(mun, is.na(mun$CODIGO_MUNICIPIO))
-#test <- subset(test, select = c(CODIGO_ESTADO, MUNICIPIO, CODIGO_MUNICIPIO))
-#test <- unique(test[c('CODIGO_ESTADO', 'MUNICIPIO', 'CODIGO_MUNICIPIO')])
-#sum(is.na(test[, c('CODIGO_MUNICIPIO')]))
-#write.csv(test, 'dat/missing_mun_ids.csv', row.names = F)
+mun <- mun %>% filter(CODIGO_ESTADO == 5)
 
-  # All ids
-a <- bind_rows(x, y, z)
-b <- mun
+  # NAs by type
 
-dat <- left_join(a, b)
+    # MUNICIPIO
+nombre_na <- subset(raw, is.na(raw$MUNICIPIO))
+nombre_na <- subset(nombre_na, select = -c(MUNICIPIO))
+nombre <- left_join(nombre_na, mun)
+# Success!
+# test1 <- subset(nombre, is.na(nombre$MUNICIPIO))
+
+    # CODIGO_MUNICIPIO
+codigo_na <- subset(raw, is.na(raw$CODIGO_MUNICIPIO))
+codigo_na <- subset(codigo_na, select = -c(CODIGO_MUNICIPIO))
+codigo <- left_join(codigo_na, mun)
+# No full success
+# test2 <- subset(codigo, is.na(codigo$CODIGO_MUNICIPIO))
+# test2 <- subset(test2, select = c(CODIGO_ESTADO, MUNICIPIO, CODIGO_MUNICIPIO))
+# test2 <- unique(test2[c('CODIGO_ESTADO', 'MUNICIPIO', 'CODIGO_MUNICIPIO')])
+# sum(is.na(test2[, c('CODIGO_MUNICIPIO')]))
+# write.csv(test2, 'out/missing_mun.csv', row.names = F)
+
+    # Fix manually
+codigo$MUNICIPIO <- str_replace_all(codigo$MUNICIPIO, '^cuatrocienegas$', 'cuatro cienegas')
+codigo$MUNICIPIO <- str_replace_all(codigo$MUNICIPIO, '^francisco imadero$', 'francisco i madero')
+codigo$MUNICIPIO <- str_replace_all(codigo$MUNICIPIO, 'gral cepeda$', 'general cepeda')
+codigo <- subset(codigo, select = -c(CODIGO_MUNICIPIO))
+codigo <- left_join(codigo, mun)
+
+### HASTA AQUÍ LLEVO ###
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 # TOTALS
 

@@ -24,6 +24,7 @@ cleanText <- function(text)
   text <- str_replace_all(text, 'ó', 'o')
   text <- str_replace_all(text, 'ú', 'u')
   text <- str_replace_all(text, 'ü', 'u')
+  text <- str_replace_all(text, 'ñ', 'n')
   text <- str_replace_all(text, '\\.', '')
   text <- gsub('(?<=[\\s])\\s*|^\\s+|\\s+$', '', text, perl = TRUE)
     # checks for whitespace - deserves its own explanation:
@@ -60,7 +61,7 @@ ayu_13$ELECCION <- as.factor('ayu')
 
   # Diputado Local 2014
 names(dil_14) <- c(
-  'DISTRITO_LOC', 'MUNICIPIO_CODIGO', 'SECCION', 'NOMINAL',
+  'DISTRITO_LOC', 'CODIGO_MUNICIPIO', 'SECCION', 'NOMINAL',
   'PAN', 'PRI', 'PTSC', 'PRD', 'PT', 'PVEM', 'PUDC', 'PMC', 'PNA', 'PSDC', 'PPC', 'PJ', 'PRC', 'PPRO', 'PCP',
   'IND1_DIL14', 'IND2_DIL14',
   'VALIDOS', 'NULOS', 'TOTAL')
@@ -151,6 +152,7 @@ gob_17 <- gob_17 %>%
 
 dat <- bind_rows(ayu_13, dil_14, ayu_17, dil_17, gob_17)
 dat$ESTADO <- as.character('coahuila')
+dat$CODIGO_ESTADO <- as.numeric('5')
 dat$MUNICIPIO <- cleanText(tolower(dat$MUNICIPIO))
 dat <- subset(dat, select = -c(TOTAL, NULOS))
 
@@ -163,7 +165,7 @@ df <- dat %>%
   # Quick column cleanup
   select(order(colnames(.))) %>%
   select(
-    ANO, ELECCION, ESTADO, CODIGO_MUNICIPIO, MUNICIPIO, DISTRITO_LOC, SECCION, NOMINAL,
+    ANO, ELECCION, CODIGO_ESTADO, ESTADO, CODIGO_MUNICIPIO, MUNICIPIO, DISTRITO_LOC, SECCION, NOMINAL,
     everything()) %>%
   arrange(ANO, ELECCION, ESTADO, SECCION)
 
