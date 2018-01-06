@@ -73,12 +73,12 @@ codigo$MUNICIPIO <- str_replace_all(codigo$MUNICIPIO, 'gral cepeda$', 'general c
 codigo <- subset(codigo, select = -c(CODIGO_MUNICIPIO))
 codigo <- left_join(codigo, mun)
 
-# TOTALS
+# TABLE
 
 dat <- bind_rows(nombre, codigo)
 dat <- dat %>% select(-VALIDOS)
 
-# Sum
+  # TOTALS
 
 s1 <- dat %>%
   filter(ANO == 2013)
@@ -115,7 +115,6 @@ sum <- sum %>% select(-CODIGO_MUNICIPIO)
 sum$NOMINAL[sum$NOMINAL == 0] <- NA
 
 # Add missing colmuns
-
 u1 <- dat %>% filter(ANO == 2013)
 unq1 <- unique(u1[c('ANO', 'ELECCION', 'CODIGO_ESTADO', 'ESTADO', 'CODIGO_MUNICIPIO', 'MUNICIPIO', 'DISTRITO_LOC', 'SECCION')])
 u2 <- dat %>% filter(ANO == 2014)
@@ -123,24 +122,51 @@ unq2 <- unique(u2[c('ANO', 'ELECCION', 'CODIGO_ESTADO', 'ESTADO', 'CODIGO_MUNICI
 u3 <- dat %>% filter(ANO == 2017)
 unq3 <- unique(u3[c('ANO', 'ELECCION', 'CODIGO_ESTADO', 'ESTADO', 'CODIGO_MUNICIPIO', 'MUNICIPIO', 'DISTRITO_LOC', 'SECCION')])
 
+# Unique tables to bind to sum table
 unq <- bind_rows(unq1, unq2, unq3)
 unq <- unq %>% select(ANO, ELECCION, CODIGO_ESTADO, ESTADO, CODIGO_MUNICIPIO, MUNICIPIO, SECCION)
 
-# TABLE
-
-# Join votes with these columns
-tbl <- left_join(sum, unq)
-
-# Replace NaNs with NAs
-tbl[tbl == 'NaN'] = NA
-
-# WRITE
-
-df <- tbl %>%
+# Table
+sum <- left_join(sum, unq)
+sum[sum == 'NaN'] = NA # Replace NaNs with NAs
+sum <- sum %>%
   select(order(colnames(.))) %>%
   select(
     ANO, ELECCION, CODIGO_ESTADO, ESTADO, CODIGO_MUNICIPIO, MUNICIPIO, DISTRITO_LOC, SECCION,
     everything()) %>%
   arrange(ANO, ELECCION, CODIGO_ESTADO, SECCION)
 
-write.csv(df, 'out/tbl_coahuila.csv', row.names = F)
+  # PERCENTAGE
+
+# FFS
+# http://stackoverflow.com/questions/26019474/how-to-divide-all-columns-by-sum-of-columns
+# pct = df/rowSums(df)
+pct <- as.data.frame(
+  sum[, c(10:ncol(sum))]/rowSums(sum[, c(10:ncol(sum))])
+)
+
+# Append suffix
+colnames(pct) <- paste(colnames(pct), "pct", sep = ".")
+
+  # PARTICIPATION
+
+# Parties with >0 were registered in a certain election
+par <- summaryBy(
+    . ~ ANO + ELECCION,
+    data = sum,
+    FUN = c(max),
+    keep.names = TRUE
+    )
+
+# Remove columns that shouldn't be summed
+par <- subset(par, select = -c(CODIGO_ESTADO, CODIGO_MUNICIPIO, DISTRITO_LOC, SECCION, NOMINAL))
+
+# 0 means no participation
+par_tbl <- cbind(apply(par[, 3:ncol(par)], 2, function(x) ifelse(x > 0, 1, 0)), par[, 1:2])
+
+# Append suffix
+colnames(par_tbl)[1:18] <- paste(colnames(par_tbl)[1:18], "par", sep = ".")
+
+# WRITE
+write.csv(sum, 'out/tbl_coahuila.csv', row.names = F)
+write.csv(par_tbl, 'out/tbl_coahuila_parties.csv', row.names = F)
