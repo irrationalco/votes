@@ -40,9 +40,6 @@ cleanText <- function(text) {
 raw <- fread('out/coahuila.csv', header = TRUE, sep = ',', stringsAsFactors = F)
 
 # IDS
-
-	# City
-
 # Unique list of city ids
 mun <- fromJSON('dat/mx_tj.json')
 mun <- mun[[2]][[2]][[3]][[2]]
@@ -51,63 +48,40 @@ mun$MUNICIPIO <- cleanText(tolower(mun$MUNICIPIO_RAW))
 mun <- mun %>% select(-MUNICIPIO_RAW) %>% arrange(CODIGO_ESTADO, CODIGO_MUNICIPIO)
 mun <- mun %>% filter(CODIGO_ESTADO == 5)
 
-  # NAs by type
-
-    # MUNICIPIO
+# NAs
+  # MUNICIPIO
 nombre_na <- subset(raw, is.na(raw$MUNICIPIO))
 nombre_na <- subset(nombre_na, select = -c(MUNICIPIO))
 nombre <- left_join(nombre_na, mun)
-# Success!
+    # Success!
 # test1 <- subset(nombre, is.na(nombre$MUNICIPIO))
 
-    # CODIGO_MUNICIPIO
+  # CODIGO_MUNICIPIO
 codigo_na <- subset(raw, is.na(raw$CODIGO_MUNICIPIO))
 codigo_na <- subset(codigo_na, select = -c(CODIGO_MUNICIPIO))
 codigo <- left_join(codigo_na, mun)
-# No full success
+    # No full success
 # test2 <- subset(codigo, is.na(codigo$CODIGO_MUNICIPIO))
 # test2 <- subset(test2, select = c(CODIGO_ESTADO, MUNICIPIO, CODIGO_MUNICIPIO))
 # test2 <- unique(test2[c('CODIGO_ESTADO', 'MUNICIPIO', 'CODIGO_MUNICIPIO')])
 # sum(is.na(test2[, c('CODIGO_MUNICIPIO')]))
 # write.csv(test2, 'out/missing_mun.csv', row.names = F)
-
-    # Fix manually
+    # Fix corrupt data manually
 codigo$MUNICIPIO <- str_replace_all(codigo$MUNICIPIO, '^cuatrocienegas$', 'cuatro cienegas')
 codigo$MUNICIPIO <- str_replace_all(codigo$MUNICIPIO, '^francisco imadero$', 'francisco i madero')
 codigo$MUNICIPIO <- str_replace_all(codigo$MUNICIPIO, 'gral cepeda$', 'general cepeda')
 codigo <- subset(codigo, select = -c(CODIGO_MUNICIPIO))
 codigo <- left_join(codigo, mun)
 
-### HASTA AQUÍ LLEVO ###
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 # TOTALS
+
+dat <- bind_rows(nombre, codigo)
+dat <- dat %>% select(-VALIDOS)
 
 # Sum
 
 s1 <- dat %>%
-  filter(ANO == 2009)
+  filter(ANO == 2013)
 sum1 <- summaryBy(
     . ~ ANO + ELECCION + CODIGO_ESTADO + SECCION,
     data = s1,
@@ -117,7 +91,7 @@ sum1 <- summaryBy(
     )
 
 s2 <- dat %>%
-  filter(ANO == 2012)
+  filter(ANO == 2014)
 sum2 <- summaryBy(
     . ~ ANO + ELECCION + CODIGO_ESTADO + SECCION,
     data = s2,
@@ -127,7 +101,7 @@ sum2 <- summaryBy(
     )
 
 s3 <- dat %>%
-  filter(ANO == 2015)
+  filter(ANO == 2017)
 sum3 <- summaryBy(
     . ~ ANO + ELECCION + CODIGO_ESTADO + SECCION,
     data = s3,
@@ -142,12 +116,12 @@ sum$NOMINAL[sum$NOMINAL == 0] <- NA
 
 # Add missing colmuns
 
-u1 <- dat %>% filter(ANO == 2009)
-unq1 <- unique(u1[c('ANO', 'ELECCION', 'CODIGO_ESTADO', 'ESTADO', 'CODIGO_MUNICIPIO', 'MUNICIPIO', 'DISTRITO_FED', 'SECCION')])
-u2 <- dat %>% filter(ANO == 2012)
-unq2 <- unique(u2[c('ANO', 'ELECCION', 'CODIGO_ESTADO', 'ESTADO', 'CODIGO_MUNICIPIO', 'MUNICIPIO', 'DISTRITO_FED', 'SECCION')])
-u3 <- dat %>% filter(ANO == 2015)
-unq3 <- unique(u3[c('ANO', 'ELECCION', 'CODIGO_ESTADO', 'ESTADO', 'CODIGO_MUNICIPIO', 'MUNICIPIO', 'DISTRITO_FED', 'SECCION')])
+u1 <- dat %>% filter(ANO == 2013)
+unq1 <- unique(u1[c('ANO', 'ELECCION', 'CODIGO_ESTADO', 'ESTADO', 'CODIGO_MUNICIPIO', 'MUNICIPIO', 'DISTRITO_LOC', 'SECCION')])
+u2 <- dat %>% filter(ANO == 2014)
+unq2 <- unique(u2[c('ANO', 'ELECCION', 'CODIGO_ESTADO', 'ESTADO', 'CODIGO_MUNICIPIO', 'MUNICIPIO', 'DISTRITO_LOC', 'SECCION')])
+u3 <- dat %>% filter(ANO == 2017)
+unq3 <- unique(u3[c('ANO', 'ELECCION', 'CODIGO_ESTADO', 'ESTADO', 'CODIGO_MUNICIPIO', 'MUNICIPIO', 'DISTRITO_LOC', 'SECCION')])
 
 unq <- bind_rows(unq1, unq2, unq3)
 unq <- unq %>% select(ANO, ELECCION, CODIGO_ESTADO, ESTADO, CODIGO_MUNICIPIO, MUNICIPIO, SECCION)
@@ -165,8 +139,8 @@ tbl[tbl == 'NaN'] = NA
 df <- tbl %>%
   select(order(colnames(.))) %>%
   select(
-    ANO, ELECCION, CODIGO_ESTADO, ESTADO, CODIGO_MUNICIPIO, MUNICIPIO, DISTRITO_FED, SECCION,
+    ANO, ELECCION, CODIGO_ESTADO, ESTADO, CODIGO_MUNICIPIO, MUNICIPIO, DISTRITO_LOC, SECCION,
     everything()) %>%
   arrange(ANO, ELECCION, CODIGO_ESTADO, SECCION)
 
-write.csv(df, 'dat/tbl_ine.csv', row.names = F)
+write.csv(df, 'out/tbl_coahuila.csv', row.names = F)
