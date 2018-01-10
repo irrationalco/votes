@@ -1,21 +1,44 @@
 
-# Versión 0.0
-# Script de primera versión del módelo
+# Versión 0.2
+# Script del modelo ya con estados
 
 # Este es un modelo de regresión multinomial (sencillo) que como primera
 # aproximación nos puede ayudar a hacer predicciones por localidad (Hopefully)
 
 library(nnet)
 
-y <- as.factor(rep(1:5, each = 10))
+inegi <- read.csv("../inegi/out/inegi_summary.csv", header = TRUE)
+partidos <- c("PAN", "PRI", "MORENA", "PRD")
+n <- dim(inegi)[1] # Número total de secciones
 
-x <- rnorm(n = 50) + as.numeric(y)
+# Para este ejecicio de prueba, hago una random selecion de los datos nos debería llevar a un 25% en las probas para cada sección.
+datosClean <- data.frame(inegi, 
+                    P_GANADOR = sample(partidos, size = n, replace = TRUE))
 
-datos <- data.frame(y,x)
+# Corro el modelo con algunas variables completamente subjetivas
+modelo <- multinom(P_GANADOR ~ 
+                       HIJOS + 
+                       LIMITACION + 
+                       ANALFABETISMO + 
+                       EDUCACION_AV + 
+                       NO_SERV_SALUD + 
+                       AUTO, data = datosClean)
 
-modelo <- multinom(y ~ x, data = data) # Las probabilidades están en fitted
+resumen <- summary(modelo)
+resumen
+# Debe de haber una mejor manera de calcular esto...
+z <- resumen$coefficients/resumen$standard.errors
+p <- (1 - pnorm(abs(z), 0, 1)) * 2
+p #obvio nada es significativo por como hice la asignación random.
 
+# Calculamos la devianza de los residuales para comparar entre modelos
+# En modelo$value se guarda -log verosimilitud 
+2*modelo$value 
+
+# Cálculo de los p-values usando una prueba de Wald de dos colas
+z <- modelo
+
+# Las probabilidades están en fitted
 probas <- as.data.frame(modelo$fitted.values)
-write.csv(x = probas, file = "Prueba1.csv")
+write.csv(x = probas, file = "Prueba2.csv")
 
-apply(X = modelo$fitted.values, MARGIN = 1, FUN = sum)
