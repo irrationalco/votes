@@ -16,6 +16,7 @@ datosClean <- data.frame(inegi,
                     P_GANADOR = sample(partidos, size = n, replace = TRUE))
 
 # Corro el modelo con algunas variables completamente subjetivas
+# Se puede tambi[en con un gbm(distro = multinomial) 
 modelo <- multinom(P_GANADOR ~ 
                        HIJOS + 
                        LIMITACION + 

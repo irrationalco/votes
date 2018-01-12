@@ -33,7 +33,7 @@ Primero tenemos que ver quien ha sido el ganador
 7. Visualizar el modelo
 8. Ver como podemos escalar el modelo e incorporarle componentes más avanzados
 9. Agregar componente de independientes
-10. Ver que onda con morena
+10. **Ver que onda con morena e indep.**
 	Ver votos de 2012 y si votaron por AMLO ponerle algún peso para votos de MORENA
 11. Analizar factibilidad de usar modelo probit, Multiple-group discriminant function analysis
 12. Validar supuestos, en este caso, IIA (Independence of irrelevant alternatives o binary independence) Leer sobre Arrow's imposibility theorem. Claramente no se cumple por los principios de BH peeeero for now fuck it. Hay otro tipo de modelos donde podemos relajar ese supuesto.
