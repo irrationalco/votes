@@ -181,13 +181,37 @@ gob_17 <- gob_17 %>%
   # Data frame
   as.data.frame
 
-  ### ALL
+  ### GOB
+gob <- gob_17
+gob$ESTADO <- as.character('coahuila')
+gob$CODIGO_ESTADO <- as.numeric('5')
+gob <- subset(gob, select = -c(TOTAL, NULOS))
 
+gob <- gob %>%
+  # Remove independents (we can infer the share out of the 'VALIDOS' count)
+  select(-matches('^IND')) %>%
+  # Remove electoral sections labeled '0'
+  filter(!grepl('^0', SECCION)) %>%
+  # Quick column cleanup
+  select(order(colnames(.))) %>%
+  select(
+    ANO, ELECCION, CODIGO_ESTADO, ESTADO, CODIGO_MUNICIPIO, MUNICIPIO, DISTRITO_LOC, SECCION, NOMINAL,
+    everything()) %>%
+  arrange(ANO, ELECCION, ESTADO, SECCION)
+
+  ### ALL
 dat <- bind_rows(ayu_13, dil_14, ayu_17, dil_17, gob_17)
-dat$ESTADO <- as.character('coahuila')
-dat$CODIGO_ESTADO <- as.numeric('5')
-dat$MUNICIPIO <- cleanText(tolower(dat$MUNICIPIO))
-dat <- subset(dat, select = -c(TOTAL, NULOS))
+dat <- dat %>%
+  # Remove independents (we can infer the share out of the 'VALIDOS' count)
+  select(-matches('^IND')) %>%
+  # Remove electoral sections labeled '0'
+  filter(!grepl('^0', SECCION)) %>%
+  # Quick column cleanup
+  select(order(colnames(.))) %>%
+  select(
+    ANO, ELECCION, CODIGO_ESTADO, ESTADO, CODIGO_MUNICIPIO, MUNICIPIO, DISTRITO_LOC, SECCION, NOMINAL,
+    everything()) %>%
+  arrange(ANO, ELECCION, ESTADO, SECCION)
 
 # Stuff
 df <- dat %>%
