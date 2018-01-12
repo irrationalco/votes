@@ -3,10 +3,8 @@
 # SETUP
 #########
 
-setwd('/Users/Franklin/Git/votes/coahuila')
-
+setwd('')
 options(scipen = 999)
-
 require(data.table)
 require(dplyr)
 require(tidyr)
