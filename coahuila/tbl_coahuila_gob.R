@@ -2,7 +2,7 @@
 
 # SETUP
 
-setwd('')
+setwd('/Users/Franklin/Git/votes/coahuila')
 options(scipen = 999)
 require(data.table)
 require(doBy)
@@ -37,7 +37,7 @@ cleanText <- function(text) {
 # DATA
 
 # Read
-raw <- fread('out/coahuila.csv', header = TRUE, sep = ',', stringsAsFactors = F)
+raw <- fread('out/coahuila_gob.csv', header = TRUE, sep = ',', stringsAsFactors = F)
 
 # IDS
 # Unique list of city ids
@@ -48,69 +48,20 @@ mun$MUNICIPIO <- cleanText(tolower(mun$MUNICIPIO_RAW))
 mun <- mun %>% select(-MUNICIPIO_RAW) %>% arrange(CODIGO_ESTADO, CODIGO_MUNICIPIO)
 mun <- mun %>% filter(CODIGO_ESTADO == 5)
 
-# NAs
-  # MUNICIPIO
-nombre_na <- subset(raw, is.na(raw$MUNICIPIO))
-nombre_na <- subset(nombre_na, select = -c(MUNICIPIO))
-nombre <- left_join(nombre_na, mun)
-    # Success!
-# test1 <- subset(nombre, is.na(nombre$MUNICIPIO))
+# Municipal code
+dat <- raw %>%
+  left_join(., mun)
 
-  # CODIGO_MUNICIPIO
-codigo_na <- subset(raw, is.na(raw$CODIGO_MUNICIPIO))
-codigo_na <- subset(codigo_na, select = -c(CODIGO_MUNICIPIO))
-codigo <- left_join(codigo_na, mun)
-    # No full success
-# test2 <- subset(codigo, is.na(codigo$CODIGO_MUNICIPIO))
-# test2 <- subset(test2, select = c(CODIGO_ESTADO, MUNICIPIO, CODIGO_MUNICIPIO))
-# test2 <- unique(test2[c('CODIGO_ESTADO', 'MUNICIPIO', 'CODIGO_MUNICIPIO')])
-# sum(is.na(test2[, c('CODIGO_MUNICIPIO')]))
-# write.csv(test2, 'out/missing_mun.csv', row.names = F)
-    # Fix corrupt data manually
-codigo$MUNICIPIO <- str_replace_all(codigo$MUNICIPIO, '^cuatrocienegas$', 'cuatro cienegas')
-codigo$MUNICIPIO <- str_replace_all(codigo$MUNICIPIO, '^francisco imadero$', 'francisco i madero')
-codigo$MUNICIPIO <- str_replace_all(codigo$MUNICIPIO, 'gral cepeda$', 'general cepeda')
-codigo <- subset(codigo, select = -c(CODIGO_MUNICIPIO))
-codigo <- left_join(codigo, mun)
-
-# TABLE
-
-dat <- bind_rows(nombre, codigo)
-dat <- dat %>% select(-VALIDOS)
-
-  # TOTALS
-
-s1 <- dat %>%
-  filter(ANO == 2013)
-sum1 <- summaryBy(
+# Sum votes
+sum <- summaryBy(
     . ~ ANO + ELECCION + CODIGO_ESTADO + SECCION,
-    data = s1,
+    data = dat,
     FUN = c(sum),
     keep.names = TRUE,
     na.rm = TRUE
     )
+write.csv(sum, 'out/tbl_coahuila_gob.csv', row.names = F)
 
-s2 <- dat %>%
-  filter(ANO == 2014)
-sum2 <- summaryBy(
-    . ~ ANO + ELECCION + CODIGO_ESTADO + SECCION,
-    data = s2,
-    FUN = c(sum),
-    keep.names = TRUE,
-    na.rm = TRUE
-    )
-
-s3 <- dat %>%
-  filter(ANO == 2017)
-sum3 <- summaryBy(
-    . ~ ANO + ELECCION + CODIGO_ESTADO + SECCION,
-    data = s3,
-    FUN = c(sum),
-    keep.names = TRUE,
-    na.rm = TRUE
-    )
-
-sum <- bind_rows(sum1, sum2, sum3)
 sum <- sum %>% select(-CODIGO_MUNICIPIO)
 sum$NOMINAL[sum$NOMINAL == 0] <- NA
 
