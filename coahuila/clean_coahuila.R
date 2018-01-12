@@ -195,9 +195,12 @@ gob <- gob %>%
   # Quick column cleanup
   select(order(colnames(.))) %>%
   select(
-    ANO, ELECCION, CODIGO_ESTADO, ESTADO, CODIGO_MUNICIPIO, MUNICIPIO, DISTRITO_LOC, SECCION, NOMINAL,
+    ANO, ELECCION, CODIGO_ESTADO, ESTADO, CODIGO_MUNICIPIO, DISTRITO_LOC, SECCION,
     everything()) %>%
   arrange(ANO, ELECCION, ESTADO, SECCION)
+
+ # Write
+write.csv(gob, 'out/coahuila_gob.csv', row.names = F)
 
   ### ALL
 dat <- bind_rows(ayu_13, dil_14, ayu_17, dil_17, gob_17)
