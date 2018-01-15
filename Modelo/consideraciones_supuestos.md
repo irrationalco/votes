@@ -17,6 +17,7 @@ Primero tenemos que ver quien ha sido el ganador
 - Perfect prediction
 - Podemos expresar las probabilidades de ocurrencia de cierto outcome como combinación lineal de las características observadas (de cierta sección) con los parámetros generales de algúna localidad
 - Revisar colinearidad
+- IIA 
 
 
 ## Things to consider
@@ -44,7 +45,3 @@ Bibliografía:
 - (Modelo) https://en.wikipedia.org/wiki/Multinomial_logistic_regression
 - (Modelo) https://stats.idre.ucla.edu/r/dae/multinomial-logistic-regression/
 - (IIA) https://stats.stackexchange.com/questions/147489/iia-assumption-difference-logit-and-probit
-- Papers por leer (que comparan los MNL y MNP)
-- http://www.sciencedirect.com/science/article/pii/S0261379403000404
-- https://cdr.lib.unc.edu/indexablecontent/uuid:008129bb-c121-47ca-9671-3396eb655b2c
-

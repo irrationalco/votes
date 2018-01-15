@@ -6,6 +6,7 @@
 # aproximación nos puede ayudar a hacer predicciones por localidad (Hopefully)
 
 library(nnet)
+library(MNP)
 
 inegi <- read.csv("../inegi/out/inegi_summary.csv", header = TRUE)
 partidos <- c("PAN", "PRI", "MORENA", "PRD")
