@@ -2,7 +2,7 @@
 
 # SETUP
 
-setwd('')
+setwd('/Users/Franklin/Git/votes/coahuila')
 options(scipen = 999)
 require(data.table)
 require(doBy)
@@ -60,4 +60,6 @@ sum <- summaryBy(
     keep.names = TRUE,
     na.rm = TRUE
     )
+
+# Write
 write.csv(sum, 'out/tbl_coahuila_gob.csv', row.names = F)

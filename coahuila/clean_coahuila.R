@@ -41,15 +41,6 @@ cleanText <- function(text)
 # DATA
 #########
 
-# Unique list of city ids
-mun <- fromJSON('dat/mx_tj.json')
-mun <- mun[[2]][[2]][[3]][[2]]
-names(mun) <- c('CODIGO_ESTADO', 'CODIGO_MUNICIPIO', 'MUNICIPIO_RAW')
-mun$MUNICIPIO <- cleanText(tolower(mun$MUNICIPIO_RAW))
-mun <- mun %>% select(-MUNICIPIO_RAW) %>% arrange(CODIGO_ESTADO, CODIGO_MUNICIPIO)
-mun <- mun %>% filter(CODIGO_ESTADO == 5)
-write.csv(mun, 'out/coahuila_municipios_ids.csv', row.names = F)
-
 # Read files
 ayu_13 <- read.xlsx('raw/ayu_2013.xlsx', 1)
 dil_14 <- read.xlsx('raw/dil_2014.xlsx', 1)
