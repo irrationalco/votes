@@ -14,8 +14,8 @@ HIJOS           PROM_HNV
 
 ### Migración
 
-# % Población nacida en
-ENTIDAD_NAC     (PNACENT/POBTOT)*100 la entidad 
+# % Población nacida en la entidad
+ENTIDAD_NAC     (PNACENT/POBTOT)*100  
 # % Población de 5 años y más residente en la entidad en junio de 2005
 ENTIDAD_INM     (PRES2005/P_5YMAS)*100
 # % Población de 5 años y más residente en otra entidad en junio de 2005
