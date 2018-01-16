@@ -7,6 +7,7 @@ setwd('')
 options(scipen = 999)
 require(data.table)
 require(dplyr)
+require(jsonlite)
 require(tidyr)
 require(openxlsx)
 require(stringr)
@@ -47,7 +48,7 @@ names(mun) <- c('CODIGO_ESTADO', 'CODIGO_MUNICIPIO', 'MUNICIPIO_RAW')
 mun$MUNICIPIO <- cleanText(tolower(mun$MUNICIPIO_RAW))
 mun <- mun %>% select(-MUNICIPIO_RAW) %>% arrange(CODIGO_ESTADO, CODIGO_MUNICIPIO)
 mun <- mun %>% filter(CODIGO_ESTADO == 5)
-write.csv(mun, 'out/municipios_ids.csv', row.names = F)
+write.csv(mun, 'out/coahuila_municipios_ids.csv', row.names = F)
 
 # Read files
 ayu_13 <- read.xlsx('raw/ayu_2013.xlsx', 1)
@@ -158,7 +159,8 @@ dil_17 <- dil_17 %>%
 
 # Gobernador 2017
 gob_17 <- gob_17 %>% select(-1, -2) # Remove folios
-gob_17 <- gob_17[, apply(gob_17[1:(ncol(gob_17))], 2, sum)!= 0] # Remove columns that sum zero
+gob_17<- gob_17 %>% # Remove columns that sum zero
+  select(which(!colSums(gob_17, na.rm = TRUE) %in% 0))
 names(gob_17)[1:17] <- c(
   'DISTRITO_LOC', 'CODIGO_MUNICIPIO', 'SECCION',
   'PAN', 'PRI', 'PRD', 'PT', 'PVEM', 'PUDC', 'PNA', 'PSI', 'PPC', 'PJ', 'PRC', 'PCP', 'PMOR', 'PES')
@@ -167,35 +169,33 @@ names(gob_17)[1:17] <- c(
 coa_gob_pri <- c('PRI', 'PVE', 'PNA', 'SI', 'PJ', 'PRC', 'PCP')
 coa_gob_pan <- c('PAN', 'PUDC', 'PPC', 'PES')
 
-# Remove useless shit
+# Aggregate coalitions to single party
 gob_17 <- gob_17 %>%
-  # Aggregate coalitions to single party
-  mutate(PRI = rowSums(select(., matches(paste(coa_gob_pri, collapse = '|'))))) %>%
-  mutate(PAN = rowSums(select(., matches(paste(coa_gob_pan, collapse = '|'))))) %>%
+  transform(PRI = rowSums(select(., matches(paste(coa_gob_pri, collapse = '|'))))) %>%
+  transform(PAN = rowSums(select(., matches(paste(coa_gob_pan, collapse = '|'))))) %>%
   # Reduce
-  select(1:17) %>%
+  .[ , c(3:11, 132:134)] %>%
+  # Rename columns
+  rename(CC1_GOB17 = cand_ind1, CC2_GOB17 = cand_ind2, CC3_GOB17 = cand_nreg) %>% # old = new
   # Add year
   mutate(ANO = as.factor('2017')) %>%
   # Add election
   mutate(ELECCION = as.factor('gob')) %>%
+  # Add state
+  mutate(ESTADO = as.character('coahuila')) %>%
+  # Add state code
+  mutate(CODIGO_ESTADO = as.numeric('5')) %>%
   # Data frame
   as.data.frame
 
-  ### GOB
-gob <- gob_17
-gob$ESTADO <- as.character('coahuila')
-gob$CODIGO_ESTADO <- as.numeric('5')
-gob <- subset(gob, select = -c(TOTAL, NULOS))
-
-gob <- gob %>%
-  # Remove independents (we can infer the share out of the 'VALIDOS' count)
-  select(-matches('^IND')) %>%
+# Clean up a bit
+gob <- gob_17 %>%
   # Remove electoral sections labeled '0'
   filter(!grepl('^0', SECCION)) %>%
   # Quick column cleanup
   select(order(colnames(.))) %>%
   select(
-    ANO, ELECCION, CODIGO_ESTADO, ESTADO, CODIGO_MUNICIPIO, DISTRITO_LOC, SECCION,
+    ANO, ELECCION, CODIGO_ESTADO, ESTADO, SECCION,
     everything()) %>%
   arrange(ANO, ELECCION, ESTADO, SECCION)
 
