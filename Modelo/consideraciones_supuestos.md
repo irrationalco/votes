@@ -8,10 +8,11 @@ Un modelo de regresión multinomial es un problema de clasificación múltiple d
 z ~ x1 + x2 + x3 + ... + e:i 
 En donde asumimos que e_i se distribuye normal con matriz de varianzas y covarianzas S
 
-Por lo pronto (al 16-Enero) el modelo es
+Por lo pronto (al 17-Enero) el modelo es
 Ganador_seccion ~  Hijos + Limitaciones + Analfabetismo + 
-                Educación + Servicios de Salud + Auto
+                Educación + Servicios de Salud + Auto - 1
 
+El -1 es para quitarle el intercept que es redundante dado que los datos están escalados (para poderlos interpretar y para darle estabilidad numerica al modelo).
 Quiero meterle el componente de las encuestas y los resultados historicos pero aún no se como.
 
 ## Things to consider
@@ -22,6 +23,14 @@ Quiero meterle el componente de las encuestas y los resultados historicos pero a
 5. Ver como incorporamos otros partidos que no hayan ganado en ninguna sección
 6. **Ver que onda con morena e indep.**
 	Ver votos de 2012 y si votaron por AMLO ponerle algún peso para votos de MORENA
+
+## Problemas
+- Paquete MNP 
+- Este ya domino como funciona y tiene la funcionalidad de darle choice specific variables muy fácil, sin embargo, me está rompiendo los huevos la convergencia.
+Al aumentar n.draws se sale de los parametros y algo se rompe que no me deja acabar de correrlo.
+- Hay variables que están bien y otras que se van a la fregada.
+- Faltan muchos datos de Morena, por eso no pintan y ninguno de sus regresores jala todos convergen a 0
+- No encontré ninguna que su dimensión se fuera a la fregada
 
 Bibliografía:
 - (Modelo) https://en.wikipedia.org/wiki/Multinomial_logistic_regression
