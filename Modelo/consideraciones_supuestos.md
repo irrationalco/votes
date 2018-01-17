@@ -3,43 +3,25 @@
 ## Preamble
 - Tratar los datos faltantes como 0's en lugar de como NA's
 
-## Modelo de regresión multinomial 
-- y: vector de factores (en nuestro caso serán los posibles partidos politicos o coaliciones) que son nuestras variables de respuesta.
-- x: matriz de covariables demográficas (ingresos, religión, raza, etc.) 
+## Modelo de regresión multinomial probit (con el paquete MNP o con bayesM)
+Un modelo de regresión multinomial es un problema de clasificación múltiple donde tienes p categorías. 
+z ~ x1 + x2 + x3 + ... + e:i 
+En donde asumimos que e_i se distribuye normal con matriz de varianzas y covarianzas S
 
-Un modelo de regresión multinomial es un problema de clasificación múltiple. 
-y ~ x
+Por lo pronto (al 16-Enero) el modelo es
+Ganador_seccion ~  Hijos + Limitaciones + Analfabetismo + 
+                Educación + Servicios de Salud + Auto
 
-Primero tenemos que ver quien ha sido el ganador 
-
-## Supuestos:
-- Complete or quasi complete separation
-- Perfect prediction
-- Podemos expresar las probabilidades de ocurrencia de cierto outcome como combinación lineal de las características observadas (de cierta sección) con los parámetros generales de algúna localidad
-- Revisar colinearidad
-- IIA 
-
+Quiero meterle el componente de las encuestas y los resultados historicos pero aún no se como.
 
 ## Things to consider
-1. Ver como vamos a agrupar los datos para correr las n regresiones
-	Creo que podemos entrenar el modelo por estado y compararlo para uno nacional para ver como cambia
-2. Encontrar el label directo de nuestros datos del INE
-	Automatizar esto
-3. Considerar la perdida de información dada por que no estamos considerando los porcenajes de los otros candidatos, es completamente categórico.
-	Meterle un componente bayesiano?
-4. Ver como lo podemos automatizar
-5. Investigar supuestos e implicaciones
-6. Identificar cual tiene que ser nuestra categoría base
-	Se hace un refactor con la función `RELEVEL` y sería útil que variara. Siento que es bueno que para cada sección fuera el partido ganador. (Tenemos esa info)
-7. Visualizar el modelo
-8. Ver como podemos escalar el modelo e incorporarle componentes más avanzados
-9. Agregar componente de independientes
-10. **Ver que onda con morena e indep.**
+1. El modelo permite que tengamos individual-specific variables (condiciones socioeconomicas de cada sección) pero también nos permite meterle choice-specific variables (variables que toman valores dependiendo de la elección de persona)
+2. Por aquello de la convergencia de que necesitamos muchos más datos, creo que sería prudente agrupar el país en secciones pues no está siendo suficiente la información de un estado
+3. Como categoría base, propongo que usemos el partido que gana la última elección. `RELEVEL`
+4. Visualizar el modelo y hacer pruebas de convergencia de la MCMC
+5. Ver como incorporamos otros partidos que no hayan ganado en ninguna sección
+6. **Ver que onda con morena e indep.**
 	Ver votos de 2012 y si votaron por AMLO ponerle algún peso para votos de MORENA
-11. Analizar factibilidad de usar modelo probit, Multiple-group discriminant function analysis
-12. Validar supuestos, en este caso, IIA (Independence of irrelevant alternatives o binary independence) Leer sobre Arrow's imposibility theorem. Claramente no se cumple por los principios de BH peeeero for now fuck it. Hay otro tipo de modelos donde podemos relajar ese supuesto.
-13. Calcular los p-values usando una prueba de Wald (revisar eso) y ver como podemos hacer el análisis back & Forth
-14. Prodemos jacer unas gráficas viendo como se ven las diferentes probas (a la 538) dependiendo de los diferentes factores.
 
 Bibliografía:
 - (Modelo) https://en.wikipedia.org/wiki/Multinomial_logistic_regression
