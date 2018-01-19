@@ -3,9 +3,10 @@
 # Nota, tiene que ser modelos que salgan del paquete MNP
 
 library(RColorBrewer)
-
 analisis_rapido <- function(modelo, draws = 1000, 
                             summary = FALSE, each = FALSE){
+    # Función que analiza la convergencia de forma muy general de un modelo
+    
     # Resumen general del modelo
     if(summary == TRUE){
         print(summary(modelo))        
@@ -39,3 +40,41 @@ analisis_rapido <- function(modelo, draws = 1000,
         }        
     }
 }
+
+analisis_convergencia <- function(num_chains = 3, nvar = 50000, 
+                                  scale_disp = 1 ,verbose = TRUE){
+    
+}
+
+
+precision_modelo <- function(modelo, newdata, type = "prob", save_res = FALSE){
+    # Función que evalua el desempeño de un modelo del tipo MNP contra datos pasados
+    # Opciones para type:
+    # type = "choice"
+    # type = "prob"
+    # type = "latent"
+    # type = "order"
+    
+    # Predecimos
+    pred <- predict(modelo, newdata = newdata, type = type,)
+    
+    # Encontramos el ganador según la predicción
+    ganador_pred <- colnames(pred$p)[max.col(pred$p, ties.method = "random")]
+    
+    # Consolidamos todo en un data frame
+    resultados <- data.frame(SECCION = newdata$SECCION, pred$p, 
+                             PREDICCION = ganador_pred, REAL = newdata$GANADOR)
+    
+    # Total de correctos/totales
+    correctos <- sum(as.character(resultados$PREDICCION) == as.character(resultados$REAL))
+    total <- dim(resultados)[1] 
+    print(paste("Precisión de ", correctos/total*100, "%, de un total de ", total, 
+                "observaciones", sep = ""), quote = FALSE)
+    
+    if(save_res == TRUE){
+        write.csv(resultados, "ResultadosPredicción.csv", row.names = FALSE)
+    }
+}
+
+
+
