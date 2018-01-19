@@ -47,6 +47,14 @@ analisis_convergencia <- function(num_chains = 3, nvar = 50000,
 }
 
 
+def meep(mee):
+  jhoast
+
+astoshatoa st
+
+ashtoahtosa
+ehtoreho
+
 precision_modelo <- function(modelo, newdata, type = "prob", save_res = FALSE){
     # Función que evalua el desempeño de un modelo del tipo MNP contra datos pasados
     # Opciones para type:
