@@ -1,9 +1,7 @@
 # Create Coahuila database with historic (2003-2017) local election votes.
 
 # SETUP
-#########
-
-setwd('')
+setwd('/Users/Franklin/Git/votes/coahuila')
 options(scipen = 999)
 require(data.table)
 require(dplyr)
@@ -13,8 +11,6 @@ require(openxlsx)
 require(stringr)
 
 # FUN
-#########
-
 cleanText <- function(text) 
 {
   text <- str_replace_all(text, 'á', 'a')
@@ -39,7 +35,6 @@ cleanText <- function(text)
 }
 
 # DATA
-#########
 
 # Read files
 ayu_13 <- read.xlsx('raw/ayu_2013.xlsx', 1)

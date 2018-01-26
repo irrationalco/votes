@@ -1,8 +1,7 @@
 # Summary table of historic (2009-2015) federal election votes.
 
 # SETUP
-
-setwd('')
+setwd('/Users/Franklin/Git/votes/ine')
 options(scipen = 999)
 require(data.table)
 require(doBy)
@@ -11,7 +10,6 @@ require(jsonlite)
 require(stringr)
 
 # FUN
-
 cleanText <- function(text) {
   text <- str_replace_all(text, 'á', 'a')
   text <- str_replace_all(text, 'é', 'e')
@@ -19,6 +17,7 @@ cleanText <- function(text) {
   text <- str_replace_all(text, 'ó', 'o')
   text <- str_replace_all(text, 'ú', 'u')
   text <- str_replace_all(text, 'ü', 'u')
+  text <- str_replace_all(text, 'ñ', 'n')
   text <- str_replace_all(text, '\\.', '')
   text <- gsub('(?<=[\\s])\\s*|^\\s+|\\s+$', '', text, perl = TRUE)
     # checks for whitespace - deserves its own explanation:
@@ -41,9 +40,9 @@ raw <- fread('out/ine.csv', header = TRUE, sep = ',', stringsAsFactors = F)
 # Transform
 data <- raw %>%
 	# Aggregate coalitions to single party
-	mutate(PRD	= rowSums(.[, c('PRD', 'COA_PRD_PMC', 'COA_PRD_PT', 'COA_PRD_PT_PMC')], na.rm = T)) %>%
-	mutate(PRI	= rowSums(.[, c('PRI', 'COA_PRI_PVEM')], na.rm = T)) %>%
-	mutate(PT	= rowSums(.[, c('PT', 'COA_PT_PMC')], na.rm = T)) %>%
+	transform(PRD	= rowSums(.[, c('PRD', 'COA_PRD_PMC', 'COA_PRD_PT', 'COA_PRD_PT_PMC')], na.rm = T)) %>%
+	transform(PRI	= rowSums(.[, c('PRI', 'COA_PRI_PVEM')], na.rm = T)) %>%
+	transform(PT	= rowSums(.[, c('PT', 'COA_PT_PMC')], na.rm = T)) %>%
 	# Remove individual coalitions
 	select(-matches('^COA_')) %>%
 	# Remove electoral sections '0'
@@ -51,18 +50,27 @@ data <- raw %>%
 	# Data frame
   as.data.frame
 
-# IDS
+# CLEAN
 
-	# State
+	# Missing state ids
 
 # Unique list of state ids
 est <- data %>% filter(ANO == 2009) %>% filter(ELECCION == 'dif') %>% select(CODIGO_ESTADO, ESTADO)
 est <- unique(est[c('CODIGO_ESTADO', 'ESTADO')])
 
-# Match according to dataset
+# Match according to above
 x <- data %>% filter(ANO == 2009)
 y <- data %>% filter(ANO == 2012) %>% select(-CODIGO_ESTADO) %>% left_join(., est)
 z <- data %>% filter(ANO == 2015) %>% select(-ESTADO) %>% left_join(., est)
+
+  # Only state and sections but no city ids
+
+# Unique list of state, section and cities
+sec <- y %>% filter(ELECCION == 'dif') %>% select(CODIGO_ESTADO, MUNICIPIO, SECCION)
+sec <- unique(sec[c('CODIGO_ESTADO', 'MUNICIPIO', 'SECCION')])
+
+# Match accordin to above
+z <- z %>% select(-MUNICIPIO) %>% left_join(., sec)
 
 	# City
 
@@ -87,7 +95,6 @@ dat <- left_join(a, b)
 # TOTALS
 
 # Sum
-
 s1 <- dat %>%
   filter(ANO == 2009)
 sum1 <- summaryBy(
@@ -123,7 +130,6 @@ sum <- sum %>% select(-CODIGO_MUNICIPIO)
 sum$NOMINAL[sum$NOMINAL == 0] <- NA
 
 # Add missing colmuns
-
 u1 <- dat %>% filter(ANO == 2009)
 unq1 <- unique(u1[c('ANO', 'ELECCION', 'CODIGO_ESTADO', 'ESTADO', 'CODIGO_MUNICIPIO', 'MUNICIPIO', 'DISTRITO_FED', 'SECCION')])
 u2 <- dat %>% filter(ANO == 2012)
@@ -138,6 +144,8 @@ unq <- unq %>% select(ANO, ELECCION, CODIGO_ESTADO, ESTADO, CODIGO_MUNICIPIO, MU
 
 # Join votes with these columns
 tbl <- left_join(sum, unq)
+
+# Key for redis
 
 # Replace NaNs with NAs
 tbl[tbl == 'NaN'] = NA

@@ -19,7 +19,7 @@ setdiff(1:1660, inegi_coahuila$SECCION)
 
 # Datos de Gobernador
 # Quitamos las dos primeras colúmnas
-coahuila_gob <- coahuila_raw %>% dplyr::select(-1, -2)
+coahuila_gob <- coahuila_raw %>% dplyr::select(-1, -2) # no tienes que poner el dplyr:: a menos que estés usando plyr; está implícito en el pipe %>%
 # Todo a uppercase
 names(coahuila_gob) <- toupper(names(coahuila_gob))
 # Quitamos columnas que suman cero

@@ -1,12 +1,8 @@
 # Create database with historic (2009-2015) federal election votes.
 
 # SETUP
-#########
-
-setwd('')
-
+setwd('/Users/Franklin/Git/votes/ine')
 options(scipen = 999)
-
 require(data.table)
 require(dplyr)
 require(tidyr)
@@ -14,8 +10,6 @@ require(openxlsx)
 require(stringr)
 
 # FUN
-#########
-
 cleanText <- function(text) 
 {
   text <- str_replace_all(text, 'á', 'a')
@@ -39,12 +33,10 @@ cleanText <- function(text)
 }
 
 # DATA
-#########
 
-# Read files
+# Read
 
   ### 2009 - 2012
-
 data_filenames <- list.files(path = 'raw', pattern = '*.txt') # Files
 data_path <- as.character('raw/')                             # Path
 data_files <- paste(data_path, data_filenames, sep = '')      # Files + Path
@@ -59,7 +51,6 @@ typeof(data)                                                  # What do I hav he
 str(data)                                                     # Structure
 
 # Colnames
-
 dat <- data
 
 names(dat[[1]]) <- c(
@@ -97,7 +88,6 @@ dat <- mapply(cbind, dat, 'ELECCION' = eleccion, SIMPLIFY = F)
 dat <- data.table::rbindlist(l = dat, use.names = TRUE, fill = TRUE)
 
   ### 2015
-
 dif <- read.xlsx('raw/ine_dif_2015.xlsx', 1)
 names(dif) <- c(
   'CODIGO_ESTADO', 'DISTRITO_FED', 'SECCION', 'ID_CASILLA',
@@ -108,22 +98,12 @@ names(dif) <- c(
   'NO_REG', 'NULOS', 'TOTAL', 'NOMINAL', 'OBS', 'CONTABILIZADA')
 dif$ANO <- as.factor('2015')
 dif$ELECCION <- as.factor('dif')
-dif[, 12:25] <- apply(dif[, 12:25], 2, function(x) gsub(' ', '0', x))
-dif[, 22:25] <- apply(dif[, 22:25], 2, function(x) gsub('-', NA, x))
-dif$PAN <- as.numeric(dif$PAN)
-dif$PRI <- as.numeric(dif$PRI)
-dif$PRD <- as.numeric(dif$PRD)
-dif$PVEM <- as.numeric(dif$PVEM)
-dif$PT <- as.numeric(dif$PT)
-dif$PMC <- as.numeric(dif$PMC)
-dif$PNA <- as.numeric(dif$PNA)
-dif$PMOR <- as.numeric(dif$PMOR)
-dif$PH <- as.numeric(dif$PH)
-dif$PS <- as.numeric(dif$PS)
-dif$COA_PRI_PVEM <- as.numeric(dif$COA_PRI_PVEM)
-dif$COA_PRD_PT <- as.numeric(dif$COA_PRD_PT)
-dif$IND1_DIF15 <- as.numeric(dif$IND1_DIF15)
-dif$IND2_DIF15 <- as.numeric(dif$IND2_DIF15)
+dif[, 12:26] <- apply(dif[, 12:26], 2, function(x) gsub(' ', '0', x))
+dif[, 22:26] <- apply(dif[, 22:26], 2, function(x) gsub('-', NA, x))
+# Convert multiple columns from character to numeric
+convert_ctn <- function(df, name = 'character', FUN = as.numeric) as.data.frame(
+  lapply(df, function(x) if (class(x) == name) FUN(x) else x))
+dif[, 12:26] <- convert_ctn(dif[, 12:26])
 dif <- subset(dif,
 	select = c(
 		ANO, ELECCION,
@@ -134,11 +114,9 @@ dif <- subset(dif,
 	)
 
   ### ALL
-
 mydat <- bind_rows(dat, dif)
 
 # CLEAN
-#########
 
 # Subset
 mydf <- subset(mydat,
@@ -151,9 +129,6 @@ mydf <- subset(mydat,
 mydf$ESTADO <- cleanText(tolower(mydf$ESTADO))
 mydf$MUNICIPIO <- cleanText(tolower(mydf$MUNICIPIO))
 
-# WRITE
-#########
-
 # Quick column cleanup
 df <- mydf %>%
   select(noquote(order(colnames(mydf)))) %>%
@@ -162,5 +137,5 @@ df <- mydf %>%
     everything()) %>%
   arrange(ANO, ELECCION, ESTADO, SECCION)
 
-# Write
+# WRITE
 write.csv(df, 'out/ine.csv', row.names = F)
