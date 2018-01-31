@@ -11,4 +11,4 @@ require(rgdal)
 dat <- readOGR('./raw', 'mexico') # Takes a while -  be patient
 key <- as.data.frame(subset(dat, select = c(ENTIDAD, MUN_IFE, MUN_INEGI, SECCION)))
 names(key) <- c('CODIGO_ENTIDAD', 'CODIGO_MUNICIPIO_IFE, CODIGO_MUNICIPIO_INEGI, SECCION')
-write.csv(key, 'out/key_ife-vs-inegi.csv', row.names = FALSE, quote = FALSE)
+write.csv(key, 'out/key_ife_vs_inegi.csv', row.names = FALSE, quote = FALSE)
