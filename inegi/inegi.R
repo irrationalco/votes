@@ -67,4 +67,6 @@ inegi <- summaryBy(
     . ~ ENTIDAD + MUN_IFE + MUN_INEGI + SECCION,
     data = inegi, keep.names = TRUE, FUN = mean)
 inegi.key <- left_join(inegi, key)
+
+# WRITE
 write.csv(inegi.key, 'out/demographics.csv', row.names = FALSE, quote = FALSE)
