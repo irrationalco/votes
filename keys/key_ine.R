@@ -1,4 +1,4 @@
-# Create master key
+# Description
 
 # SETUP
 setwd('')
@@ -16,10 +16,10 @@ data <- fread('../ine/out/tbl_ine.csv', header = TRUE, sep = ',', stringsAsFacto
 # Wide
 dat	<- data %>% select(CODIGO_ESTADO, DISTRITO_FED, SECCION, ANO) %>% as.data.frame
 df	<- unique(dat[c('CODIGO_ESTADO', 'DISTRITO_FED', 'SECCION', 'ANO')])
-x	<- spread(df, ANO, DISTRITO_FED, fill = NA) # Spread districs by year; districts that didn't exist are filled with NA
+x	<- spread(df, ANO, DISTRITO_FED, fill = NA) # Spread districts by year; districts that didn't exist are filled with NA
 
 # Colnames
 names(x)[c(3:length(x))] <- paste('DISTRITO_FED', names(x)[c(3:length(x))], sep = '_')
 
 # WRITE
-write.csv(x, 'key_ine.csv', row.names = F)
+write.csv(x, 'out/key_ine.csv', row.names = F)
