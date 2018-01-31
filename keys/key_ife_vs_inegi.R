@@ -13,4 +13,5 @@ dat <- readOGR('./raw', 'mexico') # Esto tarda
 
 # KEY
 key <- as.data.frame(subset(dat, select = c(ENTIDAD, MUN_IFE, MUN_INEGI, SECCION)))
+names(key) <- c('CODIGO_ENTIDAD', 'CODIGO_MUNICIPIO_IFE, CODIGO_MUNICIPIO_INEGI, SECCION')
 write.csv(key, 'key_ife_vs_inegi.csv', row.names = FALSE, quote = FALSE)
