@@ -1,8 +1,7 @@
-# Summary table of historic (2009-2015) federal election votes.
+# Description
 
 # SETUP
-
-setwd('')
+setwd('/Users/Franklin/Git/votes/keys')
 options(scipen = 999)
 require(data.table)
 require(doBy)
@@ -11,7 +10,6 @@ require(jsonlite)
 require(stringr)
 
 # FUN
-
 cleanText <- function(text) {
   text <- str_replace_all(text, 'á', 'a')
   text <- str_replace_all(text, 'é', 'e')
