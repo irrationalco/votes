@@ -1,3 +1,4 @@
+<<<<<<< HEAD:coahuila/tbl_coahuila_gob.R
 # Summary table of Coahuila historic (2013-2017) local election votes.
 
 # SETUP
@@ -8,6 +9,9 @@ require(data.table)
 require(doBy)
 require(dplyr)
 require(jsonlite)
+=======
+### Replaces spanish special characters and removes whitespace
+>>>>>>> a14f1d1... Fix code and comments:fun/general_fun.R
 require(stringr)
 
 # FUN
@@ -34,6 +38,7 @@ cleanText <- function(text) {
   return(text)
 }
 
+<<<<<<< HEAD:coahuila/tbl_coahuila_gob.R
 # DATA
 
 # Read
@@ -63,3 +68,8 @@ sum <- summaryBy(
 
 # Write
 write.csv(sum, 'out/tbl_coahuila_gob.csv', row.names = F)
+=======
+### Convert multiple columns from character to numeric
+convert_ctn <- function(df, name = 'character', FUN = as.numeric) as.data.frame(
+  lapply(df, function(x) if (class(x) == name) FUN(x) else x))
+>>>>>>> a14f1d1... Fix code and comments:fun/general_fun.R
