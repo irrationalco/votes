@@ -30,32 +30,31 @@ data <- raw %>%
 	# Data frame
   as.data.frame
 
+<<<<<<< HEAD
 # CLEAN
 
 	# Missing state ids
 
 # Unique list of state ids
+=======
+# IDS
+# Missing state ids
+>>>>>>> bbcee36... Fix /inegi workspace
 est <- data %>% filter(ANO == 2009) %>% filter(ELECCION == 'dif') %>% select(CODIGO_ESTADO, ESTADO)
-est <- unique(est[c('CODIGO_ESTADO', 'ESTADO')])
-
-# Match according to above
+est <- unique(est[c('CODIGO_ESTADO', 'ESTADO')]) 
+  # Match
 x <- data %>% filter(ANO == 2009)
 y <- data %>% filter(ANO == 2012) %>% select(-CODIGO_ESTADO) %>% left_join(., est)
 z <- data %>% filter(ANO == 2015) %>% select(-ESTADO) %>% left_join(., est)
 
-  # Only state and sections but no city ids
-
-# Unique list of state, section and cities
+# Missing city names
 sec <- y %>% filter(ELECCION == 'dif') %>% select(CODIGO_ESTADO, MUNICIPIO, SECCION)
 sec <- unique(sec[c('CODIGO_ESTADO', 'MUNICIPIO', 'SECCION')])
-
-# Match accordin to above
+  # Match
 z <- z %>% select(-MUNICIPIO) %>% left_join(., sec)
 
-	# City
-
-# Unique list of city ids
-mun <- fromJSON('dat/mx_tj.json')
+# Missing city ids
+mun <- fromJSON('inegi/mx_tj.json')
 mun <- mun[[2]][[2]][[3]][[2]]
 names(mun) <- c('CODIGO_ESTADO', 'CODIGO_MUNICIPIO', 'MUNICIPIO_RAW')
 mun$MUNICIPIO <- cleanText(tolower(mun$MUNICIPIO_RAW))
