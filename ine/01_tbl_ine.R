@@ -31,6 +31,7 @@ data <- raw %>%
   as.data.frame
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 # CLEAN
 
 	# Missing state ids
@@ -40,40 +41,44 @@ data <- raw %>%
 # IDS
 # Missing state ids
 >>>>>>> bbcee36... Fix /inegi workspace
+=======
+# MISSING INFO
+  # 1. State ids
+>>>>>>> 36fb24d... Fix code
 est <- data %>% filter(ANO == 2009) %>% filter(ELECCION == 'dif') %>% select(CODIGO_ESTADO, ESTADO)
 est <- unique(est[c('CODIGO_ESTADO', 'ESTADO')]) 
-  # Match
+    # Match
 x <- data %>% filter(ANO == 2009)
 y <- data %>% filter(ANO == 2012) %>% select(-CODIGO_ESTADO) %>% left_join(., est)
 z <- data %>% filter(ANO == 2015) %>% select(-ESTADO) %>% left_join(., est)
 
-# Missing city names
+  # 2. City names
 sec <- y %>% filter(ELECCION == 'dif') %>% select(CODIGO_ESTADO, MUNICIPIO, SECCION)
 sec <- unique(sec[c('CODIGO_ESTADO', 'MUNICIPIO', 'SECCION')])
-  # Match
+    # Match
 z <- z %>% select(-MUNICIPIO) %>% left_join(., sec)
 
-# Missing city ids
-mun <- fromJSON('inegi/mx_tj.json')
+  # 3. City IDS
+mun <- fromJSON('../inegi/raw/mx_tj.json')
 mun <- mun[[2]][[2]][[3]][[2]]
 names(mun) <- c('CODIGO_ESTADO', 'CODIGO_MUNICIPIO', 'MUNICIPIO_RAW')
 mun$MUNICIPIO <- cleanText(tolower(mun$MUNICIPIO_RAW))
 mun <- mun %>% select(-MUNICIPIO_RAW) %>% arrange(CODIGO_ESTADO, CODIGO_MUNICIPIO)
+
+    # Test
 #test <- subset(mun, is.na(mun$CODIGO_MUNICIPIO))
 #test <- subset(test, select = c(CODIGO_ESTADO, MUNICIPIO, CODIGO_MUNICIPIO))
 #test <- unique(test[c('CODIGO_ESTADO', 'MUNICIPIO', 'CODIGO_MUNICIPIO')])
 #sum(is.na(test[, c('CODIGO_MUNICIPIO')]))
 #write.csv(test, 'dat/missing_mun_ids.csv', row.names = F)
 
-  # All ids
+    # Match
 a <- bind_rows(x, y, z)
 b <- mun
-
 dat <- left_join(a, b)
 
 # TOTALS
-
-# Sum
+  # Compute simple sum for each year
 s1 <- dat %>%
   filter(ANO == 2009)
 sum1 <- summaryBy(
@@ -83,7 +88,6 @@ sum1 <- summaryBy(
     keep.names = TRUE,
     na.rm = TRUE
     )
-
 s2 <- dat %>%
   filter(ANO == 2012)
 sum2 <- summaryBy(
@@ -93,7 +97,6 @@ sum2 <- summaryBy(
     keep.names = TRUE,
     na.rm = TRUE
     )
-
 s3 <- dat %>%
   filter(ANO == 2015)
 sum3 <- summaryBy(
@@ -104,11 +107,12 @@ sum3 <- summaryBy(
     na.rm = TRUE
     )
 
+  # Aggregate
 sum <- bind_rows(sum1, sum2, sum3)
 sum <- sum %>% select(-CODIGO_MUNICIPIO)
 sum$NOMINAL[sum$NOMINAL == 0] <- NA
 
-# Add missing colmuns
+  # Add missing columns
 u1 <- dat %>% filter(ANO == 2009)
 unq1 <- unique(u1[c('ANO', 'ELECCION', 'CODIGO_ESTADO', 'ESTADO', 'CODIGO_MUNICIPIO', 'MUNICIPIO', 'DISTRITO_FED', 'SECCION')])
 u2 <- dat %>% filter(ANO == 2012)
@@ -120,17 +124,13 @@ unq <- bind_rows(unq1, unq2, unq3)
 unq <- unq %>% select(ANO, ELECCION, CODIGO_ESTADO, ESTADO, CODIGO_MUNICIPIO, MUNICIPIO, SECCION)
 
 # TABLE
-
-# Join votes with these columns
+  # Join votes with these columns
 tbl <- left_join(sum, unq)
 
-# Key for redis
-
-# Replace NaNs with NAs
+  # Replace NaNs with NAs
 tbl[tbl == 'NaN'] = NA
 
-# WRITE
-
+  # Clean
 df <- tbl %>%
   select(order(colnames(.))) %>%
   select(
@@ -138,4 +138,5 @@ df <- tbl %>%
     everything()) %>%
   arrange(ANO, ELECCION, CODIGO_ESTADO, SECCION)
 
+  # Write
 write.csv(df, 'out/tbl_ine.csv', row.names = F)
