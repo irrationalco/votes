@@ -1,3 +1,4 @@
+# Description
 # Create database with historic (2009-2015) federal election votes.
 
 # SETUP
@@ -7,6 +8,7 @@ require(data.table)
 require(dplyr)
 require(tidyr)
 require(openxlsx)
+<<<<<<< HEAD
 require(stringr)
 
 # FUN
@@ -31,6 +33,9 @@ cleanText <- function(text)
     # $       before an optional \n, and the end of the string
   return(text)
 }
+=======
+source('../fun/general_fun.R')
+>>>>>>> a14f1d1... Fix code and comments
 
 # DATA
 
@@ -50,7 +55,7 @@ data <- lapply(                                               # Path
 typeof(data)                                                  # What do I hav here?
 str(data)                                                     # Structure
 
-# Colnames
+  # Colnames
 dat <- data
 
 names(dat[[1]]) <- c(
@@ -73,21 +78,17 @@ names(dat[[4]]) <- c(
   'COA_PRI_PVEM', 'COA_PRD_PT_PMC', 'COA_PRD_PT', 'COA_PRD_PMC', 'COA_PT_PMC',
   'NO_REG', 'NULOS', 'VALIDOS', 'TOTAL', 'TPEJF', 'OBS', 'RUTA', 'ESTATUS')
 
-# ¿Cómo se llaman mis archivos?
+  # New columns based on file names
 data_files
-
-# Sabiendo esto, nombro columnas relevantes en secuencia
 ano <- as.factor(c('2009', '2012', '2012', '2012'))
 eleccion <- as.factor(c('dif', 'dif', 'prs', 'sen'))
-
-# Asigno las columnas anteriores
 dat <- mapply(cbind, dat, 'ANO' = ano, SIMPLIFY = F)
 dat <- mapply(cbind, dat, 'ELECCION' = eleccion, SIMPLIFY = F)
 
-# Junto todos los data frames en uno
+  # Reduce to single data frame
 dat <- data.table::rbindlist(l = dat, use.names = TRUE, fill = TRUE)
 
-  ### 2015
+### 2015
 dif <- read.xlsx('raw/ine_dif_2015.xlsx', 1)
 names(dif) <- c(
   'CODIGO_ESTADO', 'DISTRITO_FED', 'SECCION', 'ID_CASILLA',
@@ -100,9 +101,6 @@ dif$ANO <- as.factor('2015')
 dif$ELECCION <- as.factor('dif')
 dif[, 12:26] <- apply(dif[, 12:26], 2, function(x) gsub(' ', '0', x))
 dif[, 22:26] <- apply(dif[, 22:26], 2, function(x) gsub('-', NA, x))
-# Convert multiple columns from character to numeric
-convert_ctn <- function(df, name = 'character', FUN = as.numeric) as.data.frame(
-  lapply(df, function(x) if (class(x) == name) FUN(x) else x))
 dif[, 12:26] <- convert_ctn(dif[, 12:26])
 dif <- subset(dif,
 	select = c(
@@ -113,23 +111,22 @@ dif <- subset(dif,
 		)
 	)
 
-  ### ALL
+### ALL
 mydat <- bind_rows(dat, dif)
 
 # CLEAN
-
-# Subset
+  # Subset
 mydf <- subset(mydat,
   select = -c(
     CIRC, CABECERA_FED, ESTATUS, TPEJF, OBS, RUTA, NO_REG, NULOS, TOTAL, VALIDOS, CASILLA
     )
   )
 
-# Text
+  # Text
 mydf$ESTADO <- cleanText(tolower(mydf$ESTADO))
 mydf$MUNICIPIO <- cleanText(tolower(mydf$MUNICIPIO))
 
-# Quick column cleanup
+  # Quick column cleanup
 df <- mydf %>%
   select(noquote(order(colnames(mydf)))) %>%
   select(

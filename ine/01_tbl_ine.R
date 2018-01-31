@@ -1,3 +1,4 @@
+# Description
 # Summary table of historic (2009-2015) federal election votes.
 
 # SETUP
@@ -7,10 +8,14 @@ require(data.table)
 require(doBy)
 require(dplyr)
 require(jsonlite)
+<<<<<<< HEAD
 require(stringr)
 
 # FUN
 
+=======
+source('../fun/general_fun.R')
+>>>>>>> a14f1d1... Fix code and comments
 
 # DATA
 
@@ -138,5 +143,5 @@ df <- tbl %>%
     everything()) %>%
   arrange(ANO, ELECCION, CODIGO_ESTADO, SECCION)
 
-  # Write
+# WRITE
 write.csv(df, 'out/tbl_ine.csv', row.names = F)
