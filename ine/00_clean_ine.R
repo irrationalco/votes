@@ -9,6 +9,7 @@ require(dplyr)
 require(tidyr)
 require(openxlsx)
 <<<<<<< HEAD
+<<<<<<< HEAD
 require(stringr)
 
 # FUN
@@ -36,6 +37,9 @@ cleanText <- function(text)
 =======
 source('../fun/general_fun.R')
 >>>>>>> a14f1d1... Fix code and comments
+=======
+source('../_fun/general_fun.R')
+>>>>>>> 5960119... Fix code path to helper functions
 
 # DATA
 

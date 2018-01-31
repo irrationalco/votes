@@ -9,6 +9,7 @@ require(doBy)
 require(dplyr)
 require(jsonlite)
 <<<<<<< HEAD
+<<<<<<< HEAD
 require(stringr)
 
 # FUN
@@ -16,6 +17,9 @@ require(stringr)
 =======
 source('../fun/general_fun.R')
 >>>>>>> a14f1d1... Fix code and comments
+=======
+source('../_fun/general_fun.R')
+>>>>>>> 5960119... Fix code path to helper functions
 
 # DATA
 
