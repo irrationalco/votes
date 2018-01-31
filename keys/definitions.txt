@@ -1,0 +1,58 @@
+HIJOS           PROM_HNV
+		Promedio de hijos nacidos vivos
+
+
+### Migración
+
+ENTIDAD_NAC     (PNACENT/POBTOT)*100  
+		Población nacida en la misma entidad federativa
+
+# % Personas residentes en la misma entidad federativa.
+ENTIDAD_INM     (PRES2005/P_5YMAS)*100
+# % Personas residentes en otra entidad federativa.
+ENTIDAD_MIG     (PRESOE05/P_5YMAS)*100
+
+### Discapacidad
+
+# % Población con limitación en la actividad
+LIMITACION      (PCON_LIM/POBTOT)*100
+Personas que tienen dificultad para el
+desempeño y/o realización de tareas en la
+vida cotidiana
+
+### Educación
+
+# % Población de 15 años y más analfabeta
+ANALFABETISMO   (P15YM_AN/P_15YMAS)*100
+
+# % Población de 18 años y más con educación posbásica
+EDUCACION_AV    (P18YM_PB/P_18YMAS)*100
+
+### Economía
+
+# Población económicamente activa
+PEA             (PEA/POBTOT)*100
+
+### Salud
+
+# Población sin derechohabiencia a servicios de salud
+NO_SERV_SALUD   (PSINDER/POBTOT)*100
+
+### Matrimonio
+
+# Población casada o unida de 12 años y más 
+MATRIMONIOS     (P12YM_CASA/P_12YMAS)*100
+
+### Hogares
+
+# Total de hogares censales
+HOGARES         TOTHOG
+# Hogares censales con jefatura femenina
+HOGARES_JEFA    (HOGJEF_F/TOTHOG)*100
+# Población en hogares censales
+HOGARES_POB     (POBHOG/TOTHOG)*100
+
+### Viviendas
+
+# Viviendas particulares habitadas que disponen de automóvil o camioneta 
+AUTO            (VPH_AUTOM/VIVPAR_HAB)*100
