@@ -10,7 +10,7 @@ require(tidyr)
 
 # DATA
 	# Read
-data <- fread('../ine/out/tbl_ine.csv', header = TRUE, sep = ',', stringsAsFactors = F)
+data <- fread('../ine/out/tbl-ine.csv', header = TRUE, sep = ',', stringsAsFactors = F)
 
 	# Wide
 dat	<- data %>% select(CODIGO_ESTADO, DISTRITO_FED, SECCION, ANO) %>% as.data.frame
@@ -21,4 +21,4 @@ x	<- spread(df, ANO, DISTRITO_FED, fill = NA) # Spread districts by year; distri
 names(x)[c(3:length(x))] <- paste('DISTRITO_FED', names(x)[c(3:length(x))], sep = '_')
 
 # WRITE
-write.csv(x, 'out/key_ine.csv', row.names = F)
+write.csv(x, 'out/keyine.csv', row.names = F)

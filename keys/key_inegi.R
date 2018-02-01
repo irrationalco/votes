@@ -1,17 +1,17 @@
 # Description
 # Municipal codes and ids from INEGI
 
-setwd('')
+setwd('/Users/Franklin/Git/votes/keys')
 options(scipen = 999)
 require(data.table)
 require(doBy)
 require(dplyr)
 require(jsonlite)
-source('../fun/general_fun.R')
+source('../_fun/general_fun.R')
 
-mun <- fromJSON('raw/mx_tj.json')
-mun <- mun[[2]][[2]][[3]][[2]]
-mun$MUNICIPIO <- cleanText(tolower(mun$MUNICIPIO_RAW))
-mun <- mun %>% select(-MUNICIPIO_RAW) %>% arrange(CODIGO_ESTADO, CODIGO_MUNICIPIO)
-names(mun) <- c('CODIGO_ESTADO', 'CODIGO_MUNICIPIO_INEGI', 'NOMBRE_MUNICIPIO_INEGI')
-write.csv(mun, 'out/key_inegi.csv', row.names = F)
+# INEGI
+inegi <- fromJSON('../inegi/raw/mx_tj.json')
+inegi <- inegi[[2]][[2]][[3]][[2]]
+names(inegi) <- c('CODIGO_ESTADO', 'CODIGO_MUNICIPIO_INEGI', 'MUNICIPIO_INEGI_RAW')
+inegi$MUNICIPIO_INEGI <- cleanText(tolower(inegi$MUNICIPIO_INEGI_RAW))
+inegi <- inegi %>% select(-MUNICIPIO_INEGI_RAW)
