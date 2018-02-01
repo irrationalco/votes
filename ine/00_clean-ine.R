@@ -63,21 +63,21 @@ str(data)                                                     # Structure
 dat <- data
 
 names(dat[[1]]) <- c(
-  'CIRC', 'CODIGO_ESTADO', 'ESTADO', 'DISTRITO_FED', 'CABECERA_FED', 'MUNICIPIO', 'SECCION', 'CASILLA',
+  'CIRC', 'CODIGO_ESTADO', 'NOMBRE_ESTADO', 'DISTRITO_FEDERAL', 'CABECERA_FED', 'NOMBRE_MUNICIPIO', 'SECCION', 'CASILLA',
   'PAN', 'PRI', 'PRD', 'PVEM', 'PT', 'PCONV', 'PNA', 'PSD', 'PPM', 'PSM',
   'NO_REG', 'NULOS', 'TOTAL', 'NOMINAL', 'ESTATUS', 'TPEJF')
 names(dat[[2]]) <- c(
-  'ESTADO', 'DISTRITO_FED', 'MUNICIPIO', 'SECCION', 'CASILLA',
+  'NOMBRE_ESTADO', 'DISTRITO_FEDERAL', 'NOMBRE_MUNICIPIO', 'SECCION', 'CASILLA',
   'PAN', 'PRI', 'PRD', 'PVEM', 'PT', 'PMC', 'PNA',
   'COA_PRI_PVEM', 'COA_PRD_PT_PMC', 'COA_PRD_PT', 'COA_PRD_PMC', 'COA_PT_PMC',
   'NO_REG', 'NULOS', 'VALIDOS', 'TOTAL', 'TPEJF', 'OBS', 'RUTA', 'ESTATUS')
 names(dat[[3]]) <- c(
-  'ESTADO', 'DISTRITO_FED', 'MUNICIPIO', 'SECCION', 'CASILLA',
+  'NOMBRE_ESTADO', 'DISTRITO_FEDERAL', 'NOMBRE_MUNICIPIO', 'SECCION', 'CASILLA',
   'PAN', 'PRI', 'PRD', 'PVEM', 'PT', 'PMC', 'PNA',
   'COA_PRI_PVEM', 'COA_PRD_PT_PMC', 'COA_PRD_PT', 'COA_PRD_PMC', 'COA_PT_PMC',
   'NO_REG', 'NULOS', 'VALIDOS', 'TOTAL', 'NOMINAL', 'TPEJF', 'OBS', 'RUTA', 'ESTATUS')
 names(dat[[4]]) <- c(
-  'ESTADO', 'DISTRITO_FED', 'MUNICIPIO', 'SECCION', 'CASILLA',
+  'NOMBRE_ESTADO', 'DISTRITO_FEDERAL', 'NOMBRE_MUNICIPIO', 'SECCION', 'CASILLA',
   'PAN', 'PRI', 'PRD', 'PVEM', 'PT', 'PMC', 'PNA',
   'COA_PRI_PVEM', 'COA_PRD_PT_PMC', 'COA_PRD_PT', 'COA_PRD_PMC', 'COA_PT_PMC',
   'NO_REG', 'NULOS', 'VALIDOS', 'TOTAL', 'TPEJF', 'OBS', 'RUTA', 'ESTATUS')
@@ -85,8 +85,8 @@ names(dat[[4]]) <- c(
   # New columns based on file names
 data_files
 ano <- as.factor(c('2009', '2012', '2012', '2012'))
-eleccion <- as.factor(c('dif', 'dif', 'prs', 'sen'))
 dat <- mapply(cbind, dat, 'ANO' = ano, SIMPLIFY = F)
+eleccion <- as.factor(c('dif', 'dif', 'prs', 'sen'))
 dat <- mapply(cbind, dat, 'ELECCION' = eleccion, SIMPLIFY = F)
 
   # Reduce to single data frame
@@ -95,7 +95,7 @@ dat <- data.table::rbindlist(l = dat, use.names = TRUE, fill = TRUE)
 ### 2015
 dif <- read.xlsx('raw/ine_dif_2015.xlsx', 1)
 names(dif) <- c(
-  'CODIGO_ESTADO', 'DISTRITO_FED', 'SECCION', 'ID_CASILLA',
+  'CODIGO_ESTADO', 'DISTRITO_FEDERAL', 'SECCION', 'ID_CASILLA',
   'TIPO_CASILLA', 'EXT_CONTIGUA', 'UBICACION_CASILLA', 'TIPO_ACTA', 'NUM_BOLETAS_SOBRANTES', 'TOTAL_CIUDADANOS_VOTARON', 'NUM_BOLETAS_EXTRAVIADAS',
   'PAN', 'PRI', 'PRD', 'PVEM', 'PT', 'PMC', 'PNA', 'PMOR', 'PH', 'PS',
   'COA_PRI_PVEM', 'COA_PRD_PT',
@@ -109,9 +109,11 @@ dif[, 12:26] <- convert_ctn(dif[, 12:26])
 dif <- subset(dif,
 	select = c(
 		ANO, ELECCION,
-		CODIGO_ESTADO, DISTRITO_FED, SECCION,
+		CODIGO_ESTADO, DISTRITO_FEDERAL, SECCION,
 		PAN, PRI, PRD, PVEM, PT, PMC, PNA, PMOR, PH, PS,
-		COA_PRI_PVEM, COA_PRD_PT
+		COA_PRI_PVEM, COA_PRD_PT,
+    IND1_DIF15, IND2_DIF15,
+    NO_REG
 		)
 	)
 
@@ -122,21 +124,22 @@ mydat <- bind_rows(dat, dif)
   # Subset
 mydf <- subset(mydat,
   select = -c(
-    CIRC, CABECERA_FED, ESTATUS, TPEJF, OBS, RUTA, NO_REG, NULOS, TOTAL, VALIDOS, CASILLA
+    CIRC, CABECERA_FED, ESTATUS, TPEJF, OBS, RUTA, NULOS, TOTAL, VALIDOS, CASILLA
     )
   )
 
   # Text
-mydf$ESTADO <- cleanText(tolower(mydf$ESTADO))
-mydf$MUNICIPIO <- cleanText(tolower(mydf$MUNICIPIO))
+mydf$NOMBRE_ESTADO <- cleanText(tolower(mydf$NOMBRE_ESTADO))
+mydf$NOMBRE_MUNICIPIO <- cleanText(tolower(mydf$NOMBRE_MUNICIPIO))
 
   # Quick column cleanup
 df <- mydf %>%
   select(noquote(order(colnames(mydf)))) %>%
   select(
-    ANO, ELECCION, CODIGO_ESTADO, ESTADO, MUNICIPIO, DISTRITO_FED, SECCION, NOMINAL,
+    ANO, ELECCION, CODIGO_ESTADO, NOMBRE_ESTADO, NOMBRE_MUNICIPIO, DISTRITO_FEDERAL, SECCION, NOMINAL,
     everything()) %>%
-  arrange(ANO, ELECCION, ESTADO, SECCION)
+  select(-starts_with('COA'), -IND1_DIF15, -IND2_DIF15, -NO_REG, everything()) %>%
+  arrange(ANO, ELECCION, NOMBRE_ESTADO, SECCION)
 
 # WRITE
-write.csv(df, 'out/ine.csv', row.names = F)
+write.csv(df, 'out/clean-ine.csv', row.names = F)
