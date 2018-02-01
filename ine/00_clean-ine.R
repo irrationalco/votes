@@ -2,7 +2,7 @@
 # Create database with historic (2009-2015) federal election votes.
 
 # SETUP
-setwd('/Users/Franklin/Git/votes/ine')
+setwd('')
 options(scipen = 999)
 require(data.table)
 require(dplyr)
@@ -121,18 +121,13 @@ dif <- subset(dif,
 mydat <- bind_rows(dat, dif)
 
 # CLEAN
-  # Subset
 mydf <- subset(mydat,
   select = -c(
     CIRC, CABECERA_FED, ESTATUS, TPEJF, OBS, RUTA, NULOS, TOTAL, VALIDOS, CASILLA
     )
   )
-
-  # Text
 mydf$NOMBRE_ESTADO <- cleanText(tolower(mydf$NOMBRE_ESTADO))
 mydf$NOMBRE_MUNICIPIO <- cleanText(tolower(mydf$NOMBRE_MUNICIPIO))
-
-  # Quick column cleanup
 df <- mydf %>%
   select(noquote(order(colnames(mydf)))) %>%
   select(
