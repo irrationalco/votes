@@ -15,6 +15,7 @@ analisis_rapido <- function(modelo, draws = 1000,
     # Variables
     nombre_vars <- dimnames(modelo$param)[[2]]
     n <- dim(modelo$param)
+    
     # Tomamos la última parte de la cadena para que no se vea tanto
     vars_MCMC <- modelo$param[(n[1]-draws):n[1], ] 
     colnames(vars_MCMC) <- nombre_vars
@@ -41,22 +42,16 @@ analisis_rapido <- function(modelo, draws = 1000,
     }
 }
 
-analisis_convergencia <- function(num_chains = 3, nvar = 50000, 
-                                  scale_disp = 1 ,verbose = TRUE){
-    
-}
-
-
 precision_modelo <- function(modelo, newdata, type = "prob", save_res = FALSE){
     # Función que evalua el desempeño de un modelo del tipo MNP contra datos pasados
     # Opciones para type:
     # type = "choice"
-    # type = "prob"
+    # type = "prob" Probabilidades
     # type = "latent"
     # type = "order"
     
     # Predecimos
-    pred <- predict(modelo, newdata = newdata, type = type,)
+    pred <- predict(modelo, newdata = newdata, type = type)
     
     # Encontramos el ganador según la predicción
     ganador_pred <- colnames(pred$p)[max.col(pred$p, ties.method = "random")]
@@ -68,13 +63,19 @@ precision_modelo <- function(modelo, newdata, type = "prob", save_res = FALSE){
     # Total de correctos/totales
     correctos <- sum(as.character(resultados$PREDICCION) == as.character(resultados$REAL))
     total <- dim(resultados)[1] 
-    print(paste("Precisión de ", correctos/total*100, "%, de un total de ", total, 
-                "observaciones", sep = ""), quote = FALSE)
+    print(paste("\nPrecisión de ", correctos/total*100, "%, de un total de ", total, 
+                " observaciones", sep = ""), quote = FALSE)
     
     if(save_res == TRUE){
         write.csv(resultados, "ResultadosPredicción.csv", row.names = FALSE)
     }
 }
+
+grafica_hist <- function(modelo, variable)
+{
+    hist(modelo$param[, variable], xlab = colnames(modelo$param)[variable])
+}
+
 
 
 

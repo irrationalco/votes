@@ -24,7 +24,8 @@ test <- datos_mod_esc[-slice_index, ]
 
 # --------------------------------------------------------------------
 # Modelo
-modelo_coahuila <- mnp(GANADOR ~ HIJOS + ANALFABETISMO + LIMITACION +
+# ESte en teoría es preeliminar se tiene que correr cadenas más largas
+modelo_coahuila <- mnp(GANADOR ~ HIJOS + ANALFABETISMO +
                            EDUCACION_AV + NO_SERV_SALUD + AUTO - 1, 
                        data = train, 
                        base = "CPRI",
@@ -38,30 +39,30 @@ modelo_coahuila <- mnp(GANADOR ~ HIJOS + ANALFABETISMO + LIMITACION +
 analisis_rapido(modelo_coahuila)
 
 # Análisis de convergencia
-run1 <- mnp(GANADOR ~ HIJOS + LIMITACION + ANALFABETISMO + 
+run1 <- mnp(GANADOR ~ HIJOS + ANALFABETISMO + 
                 EDUCACION_AV + NO_SERV_SALUD + AUTO - 1, 
             data = train, 
             base = "CPRI",
             n.draws = 50000,
             verbose = TRUE)
 
-run2 <- mnp(GANADOR ~ HIJOS + LIMITACION + ANALFABETISMO + 
+run2 <- mnp(GANADOR ~ HIJOS + ANALFABETISMO + 
                 EDUCACION_AV + NO_SERV_SALUD + AUTO - 1, 
             data = train, 
             base = "CPRI",
             n.draws = 50000,
             verbose = TRUE,
-            coef.start = c(1,-1)*rep(1, times = 18),
+            coef.start = c(1,-1)*rep(1, times = 15),
             cov.start = matrix(0.5, ncol = 3, nrow = 3) + diag(0.5, 3))
 
-run3 <- mnp(GANADOR ~ HIJOS + LIMITACION + ANALFABETISMO + 
+run3 <- mnp(GANADOR ~ HIJOS + ANALFABETISMO + 
                 EDUCACION_AV + NO_SERV_SALUD + AUTO - 1, 
             data = train, 
             base = "CPRI",
             n.draws = 50000,
             
             verbose = TRUE,
-            coef.start = c(-1,1)*rep(1, times = 18),
+            coef.start = c(-1,1)*rep(1, times = 15),
             cov.start = matrix(0.9, ncol = 3, nrow = 3) + diag(0.9, 3))
 
 analisis_rapido(run1)
@@ -73,7 +74,7 @@ res.coda <- mcmc.list(cadena1 = mcmc(run1$param),
                       cadena2 = mcmc(run3$param))
 
 gelman.diag(res.coda, transform = FALSE) #Doesn't look good :(
-gelman.plot(res.coda, transform = TRUE)
+gelman.plot(res.coda, transform = TRUE, ylim = c(0,5))
 
 # Resultados Preliminares
 
@@ -83,7 +84,9 @@ res.coda <- mcmc.list(cadena1 = mcmc(run1$param[25001:50000,], start=25001),
                       cadena3 = mcmc(run3$param[25001:50000,], start=25001))
 
 # Un resumen comprensivo y en teoría ya perfectamente convergente, incluye cuantiles.
-# summary(res.coda)
+summary(res.coda)
+# Un resumen gráfico que sobrepone las gráficas de las corridas
+plot(res.coda, auto.layout = TRUE) 
 
 # Revisamos acurracy con los datos de test
 precision_modelo(run1, train, type = "prob", save_res = FALSE)

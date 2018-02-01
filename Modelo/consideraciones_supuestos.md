@@ -1,4 +1,4 @@
-# Instrucciones, supuestos y consideraciones del modelo
+x|# Instrucciones, supuestos y consideraciones del modelo
 
 ## Preamble
 - Tratar los datos faltantes como 0's en lugar de como NA's
@@ -8,8 +8,8 @@ Un modelo de regresión multinomial es un problema de clasificación múltiple d
 z ~ x1 + x2 + x3 + ... + e:i 
 En donde asumimos que e_i se distribuye normal con matriz de varianzas y covarianzas S
 
-Por lo pronto (al 17-Enero) el modelo es
-Ganador_seccion ~  Hijos + Limitaciones + Analfabetismo + 
+Por lo pronto (al 1-Febrero) el modelo es
+Ganador_seccion ~  Hijos  + Analfabetismo + 
                 Educación + Servicios de Salud + Auto - 1
 
 El -1 es para quitarle el intercept que es redundante dado que los datos están escalados (para poderlos interpretar y para darle estabilidad numerica al modelo).
@@ -23,6 +23,7 @@ Quiero meterle el componente de las encuestas y los resultados historicos pero a
 5. Ver como incorporamos otros partidos que no hayan ganado en ninguna sección
 6. **Ver que onda con morena e indep.**
 	Ver votos de 2012 y si votaron por AMLO ponerle algún peso para votos de MORENA
+7. Usando los análisis de convergencia propuestas, creo que todavía le falta bastante al modelo para que converga pero si alcanzo a ver ciertos partrones de que algún día y si dios quiere va a jalar.
 
 ## Problemas
 - Paquete MNP 
