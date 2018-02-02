@@ -108,7 +108,7 @@ dat <- left_join(a, b)
   # Compute simple sum for each year
 s1 <- dat %>% filter(ANO == 2009)
 sum1 <- summaryBy(
-    . ~ ANO + ELECCION + CODIGO_ESTADO + CODIGO_MUNICIPIO + DISTRITO_FEDERAL + SECCION,
+    . ~ ANO + ELECCION + CODIGO_ESTADO + CODIGO_MUNICIPIO + DISTRITO_FED + SECCION,
     data = s1,
     FUN = c(sum),
     keep.names = TRUE,
@@ -116,7 +116,7 @@ sum1 <- summaryBy(
     )
 s2 <- dat %>% filter(ANO == 2012)
 sum2 <- summaryBy(
-    . ~ ANO + ELECCION + CODIGO_ESTADO + CODIGO_MUNICIPIO + DISTRITO_FEDERAL + SECCION,
+    . ~ ANO + ELECCION + CODIGO_ESTADO + CODIGO_MUNICIPIO + DISTRITO_FED + SECCION,
     data = s2,
     FUN = c(sum),
     keep.names = TRUE,
@@ -124,7 +124,7 @@ sum2 <- summaryBy(
     )
 s3 <- dat %>% filter(ANO == 2015)
 sum3 <- summaryBy(
-    . ~ ANO + ELECCION + CODIGO_ESTADO + CODIGO_MUNICIPIO + DISTRITO_FEDERAL + SECCION,
+    . ~ ANO + ELECCION + CODIGO_ESTADO + CODIGO_MUNICIPIO + DISTRITO_FED + SECCION,
     data = s3,
     FUN = c(sum),
     keep.names = TRUE,
@@ -136,11 +136,11 @@ sum <- bind_rows(sum1, sum2, sum3)
 
   # Add missing columns
 u1 <- dat %>% filter(ANO == 2009)
-unq1 <- unique(u1[c('ANO', 'ELECCION', 'CODIGO_ESTADO', 'NOMBRE_ESTADO', 'CODIGO_MUNICIPIO', 'NOMBRE_MUNICIPIO', 'DISTRITO_FEDERAL', 'SECCION')])
+unq1 <- unique(u1[c('ANO', 'ELECCION', 'CODIGO_ESTADO', 'NOMBRE_ESTADO', 'CODIGO_MUNICIPIO', 'NOMBRE_MUNICIPIO', 'DISTRITO_FED', 'SECCION')])
 u2 <- dat %>% filter(ANO == 2012)
-unq2 <- unique(u2[c('ANO', 'ELECCION', 'CODIGO_ESTADO', 'NOMBRE_ESTADO', 'CODIGO_MUNICIPIO', 'NOMBRE_MUNICIPIO', 'DISTRITO_FEDERAL', 'SECCION')])
+unq2 <- unique(u2[c('ANO', 'ELECCION', 'CODIGO_ESTADO', 'NOMBRE_ESTADO', 'CODIGO_MUNICIPIO', 'NOMBRE_MUNICIPIO', 'DISTRITO_FED', 'SECCION')])
 u3 <- dat %>% filter(ANO == 2015)
-unq3 <- unique(u3[c('ANO', 'ELECCION', 'CODIGO_ESTADO', 'NOMBRE_ESTADO', 'CODIGO_MUNICIPIO', 'NOMBRE_MUNICIPIO', 'DISTRITO_FEDERAL', 'SECCION')])
+unq3 <- unique(u3[c('ANO', 'ELECCION', 'CODIGO_ESTADO', 'NOMBRE_ESTADO', 'CODIGO_MUNICIPIO', 'NOMBRE_MUNICIPIO', 'DISTRITO_FED', 'SECCION')])
 
 unq <- bind_rows(unq1, unq2, unq3)
 unq <- unq %>% select(ANO, ELECCION, CODIGO_ESTADO, NOMBRE_ESTADO, CODIGO_MUNICIPIO, NOMBRE_MUNICIPIO, SECCION)
@@ -156,7 +156,7 @@ tbl[tbl == 'NaN'] = NA
 df <- tbl %>%
   select(order(colnames(.))) %>%
   select(
-    ANO, ELECCION, CODIGO_ESTADO, NOMBRE_ESTADO, CODIGO_MUNICIPIO, NOMBRE_MUNICIPIO, DISTRITO_FEDERAL, SECCION,
+    ANO, ELECCION, CODIGO_ESTADO, NOMBRE_ESTADO, CODIGO_MUNICIPIO, NOMBRE_MUNICIPIO, DISTRITO_FED, SECCION,
     everything()) %>%
   select(-IND1_DIF15, -IND2_DIF15, -NO_REG, everything()) %>%
   arrange(ANO, ELECCION, CODIGO_ESTADO, SECCION)
