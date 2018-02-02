@@ -15,22 +15,21 @@ require(tidyr)
 source('../_fun/general_fun.R')
 
 # DATA
-
-### INEGI
+	# INEGI
 inegi <- fromJSON('../inegi/raw/mx_tj.json')
 inegi <- inegi[[2]][[2]][[3]][[2]]
 names(inegi) <- c('CODIGO_ESTADO', 'CODIGO_MUNICIPIO_INEGI', 'NOMBRE_MUNICIPIO_INEGI_RAW')
 inegi$NOMBRE_MUNICIPIO_INEGI <- cleanText(tolower(inegi$NOMBRE_MUNICIPIO_INEGI_RAW))
 inegi <- inegi %>% select(-NOMBRE_MUNICIPIO_INEGI_RAW)
 
-### MAP
+	# MAP
 map <- readOGR('../inegi/raw', 'mexico') # Takes a while -  be patient
 map.df <- as.data.frame(subset(map, select = c(ENTIDAD, MUN_IFE, MUN_INEGI, SECCION)))
 names(map.df) <- c('CODIGO_ESTADO', 'CODIGO_MUNICIPIO_INE', 'CODIGO_MUNICIPIO_INEGI', 'SECCION')
 map.df$CODIGO_ESTADO <- as.integer(map.df$CODIGO_ESTADO)
 map.df$CODIGO_MUNICIPIO_INE <- as.integer(map.df$CODIGO_MUNICIPIO_INE)
 
-### INE
+	# INE
 ine <- fread('../ine/out/tbl-ine.csv', header = TRUE, sep = ',', stringsAsFactors = F)
 ine <- ine %>% select(CODIGO_ESTADO, NOMBRE_ESTADO, DISTRITO_FEDERAL, SECCION, ANO) %>% as.data.frame
 ine.u <- unique(ine[c('CODIGO_ESTADO', 'NOMBRE_ESTADO', 'DISTRITO_FEDERAL', 'SECCION', 'ANO')])
