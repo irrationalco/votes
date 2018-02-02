@@ -55,8 +55,8 @@ data <- lapply(                                               # Path
     header = TRUE,
     stringsAsFactors = FALSE,
     sep = '|',
-    encoding = 'latin1')                                      # Specific encoding
-typeof(data)                                                  # What do I hav here?
+    encoding = 'latin1')                                      # Specific encoding mex gov uses
+typeof(data)                                                  # What do we haf here?
 str(data)                                                     # Structure
 
   # Colnames
@@ -134,7 +134,7 @@ df <- mydf %>%
     ANO, ELECCION, CODIGO_ESTADO, NOMBRE_ESTADO, NOMBRE_MUNICIPIO, DISTRITO_FEDERAL, SECCION, NOMINAL,
     everything()) %>%
   select(-starts_with('COA'), -IND1_DIF15, -IND2_DIF15, -NO_REG, everything()) %>%
-  arrange(ANO, ELECCION, NOMBRE_ESTADO, SECCION)
+  arrange(ANO, ELECCION, CODIGO_ESTADO, SECCION)
 
 # WRITE
 write.csv(df, 'out/clean-ine.csv', row.names = F)
