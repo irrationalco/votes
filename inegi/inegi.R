@@ -4,14 +4,14 @@
 setwd('')
 options(scipen = 999)
 require(dplyr)
-require(ggplot2)    # Necesario para la función fortify()
+require(ggplot2)	# Needed for function fortify()
 require(doBy)
 require(rgdal)
-#require(gpclib)    # Ignorar en Windows - solo first install en OSX
-#gpclibPermit()     # Y esto también
+#require(gpclib)	# Run only once for OSX install
+#gpclibPermit()		# Same ^
 
 # DATA
-dat <- readOGR('./raw', 'mexico') # Esto tarda
+dat <- readOGR('./raw', 'mexico') # Takes a while -  be patient
 
 # KEY
 key <- as.data.frame(subset(dat, select = c(ENTIDAD, MUN_IFE, MUN_INEGI, SECCION)))
@@ -44,29 +44,27 @@ map$HOGARES_POB     <-  with(map, (POBHOG/TOTHOG)*100)
 map$AUTO            <-  with(map, (VPH_AUTOM/VIVPAR_HAB)*100)
 
 # Summary
-#inegi.sum <- map
-#inegi.sum <- summaryBy(
-#    TOTAL + HOMBRES + MUJERES +
-#    HIJOS +
-#    ENTIDAD_NAC + ENTIDAD_INM + ENTIDAD_MIG +
-#    LIMITACION +
-#    ANALFABETISMO + EDUCACION_AV +
-#    PEA +
-#    NO_SERV_SALUD +
-#    MATRIMONIOS +
-#    HOGARES + HOGARES_JEFA + HOGARES_POB +
-#    AUTO
-#    ~ ENTIDAD + MUN_IFE + MUN_INEGI + SECCION,
-#    data = inegi.sum, keep.names = TRUE, FUN = mean)
-#inegi.sum.key <- left_join(inegi.sum, key)
-#write.csv(inegi.sum.key, 'out/inegi_summary.csv', row.names = FALSE, quote = FALSE)
+inegi.sum <- map
+inegi.sum <- summaryBy(
+    TOTAL + HOMBRES + MUJERES +
+    HIJOS +
+    ENTIDAD_NAC + ENTIDAD_INM + ENTIDAD_MIG +
+    LIMITACION +
+    ANALFABETISMO + EDUCACION_AV +
+    PEA +
+    NO_SERV_SALUD +
+    MATRIMONIOS +
+    HOGARES + HOGARES_JEFA + HOGARES_POB +
+    AUTO
+    ~ ENTIDAD + MUN_IFE + MUN_INEGI + SECCION,
+    data = inegi.sum, keep.names = TRUE, FUN = mean)
+inegi.sum.key <- left_join(inegi.sum, key)
+write.csv(inegi.sum.key, 'out/inegi.csv', row.names = FALSE, quote = FALSE)
 
 # All demographics
-inegi <- map
-inegi <- summaryBy(
-    . ~ ENTIDAD + MUN_IFE + MUN_INEGI + SECCION,
-    data = inegi, keep.names = TRUE, FUN = mean)
-inegi.key <- left_join(inegi, key)
-
-# WRITE
-write.csv(inegi.key, 'out/demographics.csv', row.names = FALSE, quote = FALSE)
+#inegi <- map
+#inegi <- summaryBy(
+#    . ~ ENTIDAD + MUN_IFE + MUN_INEGI + SECCION,
+#    data = inegi, keep.names = TRUE, FUN = mean)
+#inegi.key <- left_join(inegi, key)
+#write.csv(inegi.key, 'out/demographics.csv', row.names = FALSE, quote = FALSE)
