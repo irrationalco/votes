@@ -1,7 +1,7 @@
 # Data transformations from Censo INEGI 2010.
 
 # SETUP
-setwd('')
+setwd('/Users/Franklin/Git/votes/inegi')
 options(scipen = 999)
 require(dplyr)
 require(ggplot2)	# Needed for function fortify()
@@ -22,7 +22,7 @@ map.df <- data.frame(id = rownames(map.data@data), map.data@data)
 map.f <- fortify(map.data)
 map <- merge(map.f, map.df, by = 'id')
 #map_sample <- head(map, 15)
-#write.csv(map_sample, 'out/map_sample_inegi.csv', row.names = FALSE, quote = FALSE)
+#write.csv(map_sample, 'out/map_inegi_head.csv', row.names = FALSE, quote = FALSE)
 
 # FORMULAS
 map$TOTAL           <-  with(map, POBTOT)
@@ -67,4 +67,4 @@ write.csv(inegi.sum.key, 'out/inegi.csv', row.names = FALSE, quote = FALSE)
 #    . ~ ENTIDAD + MUN_IFE + MUN_INEGI + SECCION,
 #    data = inegi, keep.names = TRUE, FUN = mean)
 #inegi.key <- left_join(inegi, key)
-#write.csv(inegi.key, 'out/demographics.csv', row.names = FALSE, quote = FALSE)
+#write.csv(inegi.key, 'out/inegi-full.csv', row.names = FALSE, quote = FALSE)
