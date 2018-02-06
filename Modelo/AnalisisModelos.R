@@ -36,7 +36,7 @@ analisis_rapido <- function(modelo, draws = 1000,
         for(i in 1:dim(vars_MCMC)[2]){
             variable <- i # Cambiar este número para ver las diferentes variables
             plot(modelo_coahuila$param[,variable], type = 'l', 
-                 main = nombre_vars[variable])    
+                 main = nombre_vars[variable], col = "red")    
             readline(prompt = "Pause. Press <Enter> to continue...")
         }        
     }

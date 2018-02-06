@@ -4,8 +4,8 @@
 library(nnet)
 library(MNP)
 library(coda)
-library(bayesm)
-library(mlogit)
+library(bayesm) # Alternativa a MNP
+library(mlogit) # No jala para probit
 source("AnalisisModelos.R")
 
 datos_mod <- read.csv("Datos_Modelo/datos_modelo_coahuila.csv")
@@ -38,19 +38,20 @@ modelo_coahuila <- mnp(GANADOR ~ HIJOS + ANALFABETISMO +
 # Análisis rápdio modelo
 analisis_rapido(modelo_coahuila)
 
+n <- 10^6
 # Análisis de convergencia
 run1 <- mnp(GANADOR ~ HIJOS + ANALFABETISMO + 
                 EDUCACION_AV + NO_SERV_SALUD + AUTO - 1, 
             data = train, 
             base = "CPRI",
-            n.draws = 50000,
+            n.draws = n,
             verbose = TRUE)
 
 run2 <- mnp(GANADOR ~ HIJOS + ANALFABETISMO + 
                 EDUCACION_AV + NO_SERV_SALUD + AUTO - 1, 
             data = train, 
             base = "CPRI",
-            n.draws = 50000,
+            n.draws = n,
             verbose = TRUE,
             coef.start = c(1,-1)*rep(1, times = 15),
             cov.start = matrix(0.5, ncol = 3, nrow = 3) + diag(0.5, 3))
@@ -59,8 +60,7 @@ run3 <- mnp(GANADOR ~ HIJOS + ANALFABETISMO +
                 EDUCACION_AV + NO_SERV_SALUD + AUTO - 1, 
             data = train, 
             base = "CPRI",
-            n.draws = 50000,
-            
+            n.draws = n,
             verbose = TRUE,
             coef.start = c(-1,1)*rep(1, times = 15),
             cov.start = matrix(0.9, ncol = 3, nrow = 3) + diag(0.9, 3))
