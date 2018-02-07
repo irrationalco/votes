@@ -4,10 +4,10 @@
 setwd('')
 options(scipen = 999)
 require(dplyr)
-require(ggplot2)    # Needed for function fortify()
+require(ggplot2)    # Needed to fortify()
 require(doBy)
 require(rgdal)
-#require(gpclib)    # Run only once for OSX install
+#require(gpclib)    # Run once for OSX install
 #gpclibPermit()     # Same ^
 
 # DATA

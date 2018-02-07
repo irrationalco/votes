@@ -2,44 +2,16 @@
 # Summary table of historic (2009-2015) federal election votes.
 
 # SETUP
-setwd('/Users/Franklin/Git/votes/ine')
+setwd('')
 options(scipen = 999)
 require(data.table)
 require(doBy)
 require(dplyr)
 require(jsonlite)
-<<<<<<< HEAD
-<<<<<<< HEAD
-require(stringr)
-
-# FUN
-
-=======
-source('../fun/general_fun.R')
->>>>>>> a14f1d1... Fix code and comments
-=======
 source('../_fun/general_fun.R')
->>>>>>> 5960119... Fix code path to helper functions
 
 # DATA
-<<<<<<< HEAD
-
-# Read
-raw <- fread('out/ine.csv', header = TRUE, sep = ',', stringsAsFactors = F)
-
-# Transform
-data <- raw %>%
-	# Aggregate coalitions to single party
-	transform(PRD	= rowSums(.[, c('PRD', 'COA_PRD_PMC', 'COA_PRD_PT', 'COA_PRD_PT_PMC')], na.rm = T)) %>%
-	transform(PRI	= rowSums(.[, c('PRI', 'COA_PRI_PVEM')], na.rm = T)) %>%
-	transform(PT	= rowSums(.[, c('PT', 'COA_PT_PMC')], na.rm = T)) %>%
-	# Remove individual coalitions
-	select(-matches('^COA_')) %>%
-	# Remove electoral sections '0'
-	filter(!grepl('^0', SECCION)) %>%
-	# Data frame
-=======
-data <- fread('out/clean-ine.csv', header = TRUE, sep = ',', stringsAsFactors = F)
+data <- fread('out/clean_ine.csv', header = TRUE, sep = ',', stringsAsFactors = F)
 
 # CLEAN
 dat <- data %>%
@@ -51,31 +23,12 @@ dat <- data %>%
   select(-matches('^COA_')) %>%
   # Remove electoral sections '0'
   filter(!grepl('^0', SECCION)) %>% 
->>>>>>> c23ff75... Change formulas, codes and variable names to clean and compute votes
   as.data.frame
 
-<<<<<<< HEAD
-<<<<<<< HEAD
-# CLEAN
-
-	# Missing state ids
-
-# Unique list of state ids
-=======
-# IDS
-# Missing state ids
->>>>>>> bbcee36... Fix /inegi workspace
-=======
 # MISSING INFO
-  # 1. State ids
-<<<<<<< HEAD
->>>>>>> 36fb24d... Fix code
-est <- data %>% filter(ANO == 2009) %>% filter(ELECCION == 'dif') %>% select(CODIGO_ESTADO, ESTADO)
-est <- unique(est[c('CODIGO_ESTADO', 'ESTADO')]) 
-=======
+  # 1. State names and ids
 est <- dat %>% filter(ANO == 2009) %>% filter(ELECCION == 'dif') %>% select(CODIGO_ESTADO, NOMBRE_ESTADO)
 est <- unique(est[c('CODIGO_ESTADO', 'NOMBRE_ESTADO')]) 
->>>>>>> c23ff75... Change formulas, codes and variable names to clean and compute votes
     # Match
 x <- dat %>% filter(ANO == 2009)
 y <- dat %>% filter(ANO == 2012) %>% select(-CODIGO_ESTADO) %>% left_join(., est)
@@ -87,7 +40,7 @@ sec <- unique(sec[c('CODIGO_ESTADO', 'NOMBRE_MUNICIPIO', 'SECCION')])
     # Match
 z <- z %>% select(-NOMBRE_MUNICIPIO) %>% left_join(., sec)
 
-  # 3. City IDS
+  # 3. City ids
 mun <- fromJSON('../inegi/raw/mx_tj.json')
 mun <- mun[[2]][[2]][[3]][[2]]
 names(mun) <- c('CODIGO_ESTADO', 'CODIGO_MUNICIPIO', 'MUNICIPIO_RAW')
@@ -162,4 +115,4 @@ df <- tbl %>%
   arrange(ANO, ELECCION, CODIGO_ESTADO, SECCION)
 
 # WRITE
-write.csv(df, 'out/tbl-ine.csv', row.names = F)
+write.csv(df, 'out/tbl_ine.csv', row.names = F)

@@ -8,44 +8,10 @@ require(data.table)
 require(dplyr)
 require(tidyr)
 require(openxlsx)
-<<<<<<< HEAD
-<<<<<<< HEAD
-require(stringr)
-
-# FUN
-cleanText <- function(text) 
-{
-  text <- str_replace_all(text, 'á', 'a')
-  text <- str_replace_all(text, 'é', 'e')
-  text <- str_replace_all(text, 'í', 'i')
-  text <- str_replace_all(text, 'ó', 'o')
-  text <- str_replace_all(text, 'ú', 'u')
-  text <- str_replace_all(text, 'ü', 'u')
-  text <- str_replace_all(text, '\\.', '')
-  text <- gsub('(?<=[\\s])\\s*|^\\s+|\\s+$', '', text, perl = TRUE)
-    # checks for whitespace - deserves its own explanation:
-    # (?<=    look behind to see if there is
-    # [\s]    any character of: whitespace (\n, \r, \t, \f, and ' ')
-    # )       end of look behind
-    # \s*     whitespace (\n, \r, \t, \f, and ' ') (0 or more times (matching the most amount possible))
-    # |       or
-    # ^       the beginning of the string
-    # \s+     whitespace (\n, \r, \t, \f, and ' ') (1 or more times (matching the most amount possible))
-    # $       before an optional \n, and the end of the string
-  return(text)
-}
-=======
-source('../fun/general_fun.R')
->>>>>>> a14f1d1... Fix code and comments
-=======
 source('../_fun/general_fun.R')
->>>>>>> 5960119... Fix code path to helper functions
 
 # DATA
-
-# Read
-
-  ### 2009 - 2012
+### 2009 - 2012 historic vote records
 data_filenames <- list.files(path = 'raw', pattern = '*.txt') # Files
 data_path <- as.character('raw/')                             # Path
 data_files <- paste(data_path, data_filenames, sep = '')      # Files + Path
@@ -61,7 +27,6 @@ str(data)                                                     # Structure
 
   # Colnames
 dat <- data
-
 names(dat[[1]]) <- c(
   'CIRC', 'CODIGO_ESTADO', 'NOMBRE_ESTADO', 'DISTRITO_FEDERAL', 'CABECERA_FED', 'NOMBRE_MUNICIPIO', 'SECCION', 'CASILLA',
   'PAN', 'PRI', 'PRD', 'PVEM', 'PT', 'PCONV', 'PNA', 'PSD', 'PPM', 'PSM',
@@ -137,4 +102,4 @@ df <- mydf %>%
   arrange(ANO, ELECCION, CODIGO_ESTADO, SECCION)
 
 # WRITE
-write.csv(df, 'out/clean-ine.csv', row.names = F)
+write.csv(df, 'out/clean_ine.csv', row.names = F)

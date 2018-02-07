@@ -1,8 +1,8 @@
-.DS_Store
-.Rapp.history
-.Rhistory
-.RData
-mexico.dbf
-mexico.prj
-mexico.shp
-mexico.shx
+**.DS_Store
+**.Rapp.history
+**.Rhistory
+**.RData
+**.dbf
+**prj
+**.shp
+**.shx
