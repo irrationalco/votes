@@ -1,14 +1,14 @@
 # Data transformations from Censo INEGI 2010.
 
 # SETUP
-setwd('/Users/Franklin/Git/votes/inegi')
+setwd('')
 options(scipen = 999)
 require(dplyr)
-require(ggplot2)	# Needed for function fortify()
+require(ggplot2)    # Needed for function fortify()
 require(doBy)
 require(rgdal)
-#require(gpclib)	# Run only once for OSX install
-#gpclibPermit()		# Same ^
+#require(gpclib)    # Run only once for OSX install
+#gpclibPermit()     # Same ^
 
 # DATA
 dat <- readOGR('./raw', 'mexico') # Takes a while -  be patient
