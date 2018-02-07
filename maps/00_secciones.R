@@ -1,9 +1,9 @@
 # Description
-# Test with INE 2017 federal level shapefiles for Aguascalientes
+# Test with INE 2015 federal level shapefiles for Aguascalientes
 # https://cartografia.ife.org.mx/sige7/?distritacion=federal
 
 # Setup
-setwd('/Users/Franklin/Git/votes/maps')
+setwd('')
 options(scipen = 999)
 require(dplyr)
 require(ggplot2)
