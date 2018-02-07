@@ -53,5 +53,5 @@ analisis_rapido(run1)
 analisis_rapido(run2)
 analisis_rapido(run3)
 
-rm(run1, run2, run3)
+# rm(run1, run2, run3)
 
