@@ -1,12 +1,26 @@
-BRONCO  JAIME RODRÍGUEZ CALDERÓN
-PAN     PARTIDO ACCIÓN NACIONAL
-PCC     PARTIDO CRUZADA CIUDADANA
-PES     PARTIDO ENCUENTRO SOCIAL
-PH      PARTIDO HUMANISTA
-PMC     MOVIMIENTO CIUDADANO
-PMOR    MORENA
-PRD     PARTIDO DE LA REVOLUCIÓN DEMOCRÁTICA
-PRI     PARTIDO REVOLUCIONARIO INSTITUCIONAL	COALICIÓN
-  PD    PARTIDO DEMÓCRATA
-  PNA   PARTIDO NUEVA ALIANZA
-  PVEM  PARTIDO VERDE ECOLOGISTA DE MÉXICO
+### Independents
+
+| Var | Name |
+| --- | --- |
+| BRONCO | Jaime Rodríguez Calderón |
+
+### Parties
+
+| Var | Party |
+| --- | --- |
+| PAN | Partido Acción Nacional |
+| PCC | Partico Cruzada Ciudadana |
+| PES | Partido Encuentro Nacional |
+| PH | Paritdo Humanista |
+| PMC | Movimiento Ciudadano |
+| PMOR | MORENA |
+| PRD | Partido de la Revolución Democrática |
+
+### Coalition
+
+| Var | Party |
+| --- | --- |
+| **PRI** | **Partido Revolucionario Institucional** |
+| PD | Partido Demócrata |
+| PNA | Partido Nueva Alianza |
+| PVEM | Partido Verde Ecologista de México |

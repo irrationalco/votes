@@ -6,12 +6,11 @@ options(scipen = 999)
 require(data.table)
 require(dplyr)
 require(doBy)
-require(rgdal)
 source('../_themes/theme_maps.R')
 
 nl <- fread('dat/indice_nuevo_leon_2.csv', header = TRUE, sep = ',', stringsAsFactors = F)
 
-map.data <- readOGR('./raw', 'SECCION') # Takes a while -  be patient
+map.data <- readOGR('./raw', 'SECCION') # May take a while
 map.df <- data.frame(id = rownames(map.data@data), map.data@data)
 map.f <- fortify(map.data)
 map <- merge(map.f, map.df, by = "id")

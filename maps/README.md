@@ -89,8 +89,6 @@ Diego Valle-Jones has created a set of scripts to download and recode shapefiles
 * **rdata-secciones**: serialized secciones (precincts) map as an R object 
 Electoral shapefiles of Mexico
 
-*** The codebook for the the census data that comes with the distrito and sección shapefiles is in the `FD_SECC_IFE.pdf` file.
-
 #### How to create the topojson map
 
 ```
@@ -158,3 +156,4 @@ Población en hogares censales
 AUTO            (VPH_AUTOM/VIVPAR_HAB)*100
 Viviendas particulares habitadas que disponen de automóvil o camioneta
 ```
+The codebook for the the census data that comes with the distrito and sección shapefiles is in the `FD_SECC_IFE.pdf` file.
