@@ -19,7 +19,7 @@ test <- datos_mod_esc[-slice_index, ]
 
 # Corrida
 # Aguas, toma ~3 horas en correr en mi computadora
-n <- 10^6
+n <- 10^4
 run1 <- mnp(GANADOR ~ HIJOS + ANALFABETISMO + 
                 EDUCACION_AV + NO_SERV_SALUD + AUTO - 1, 
             data = train, 

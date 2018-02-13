@@ -8,6 +8,7 @@ library(bayesm) # Alternativa a MNP
 library(mlogit) # No jala para probit
 source("AnalisisModelos.R")
 
+
 datos_mod <- read.csv("Datos_Modelo/datos_modelo_coahuila.csv")
 
 # Estandarizo los datos para evitar problemas numéricos
