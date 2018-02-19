@@ -5,8 +5,7 @@ library(tidyverse)
 library(bayesm)
 
 # 1. Cargamos los datos
-
-inegi <- read.csv("Datos_Modelo/datos_modelo_coahuila.csv")
+inegi <- read.csv("../in/states/datos_modelo_coahuila.csv")
 # Resultados Fase 1
 # GTrends
 # Encuestas
@@ -35,21 +34,20 @@ nd <- dim(ind_vars)[2] # de individual-specific
 X <- createX(p = k, na = na, nd = nd, Xa = NULL, Xd = train, 
              INT = FALSE, DIFF = TRUE)
 
-
 # 3. Modelo
 # Setup Modelo
-n <-  10^3 # Número de Draws
+n <-  10^1 # Número de Draws
 keep <-  1 # Thinning Param
 beta_0 <- NULL
 sigma_0 <- NULL 
 
-Data1 <- list(p = k, y = y, X = X)
+Data_mod <- list(y = y, X = X, p = k)
 Mcmc_params <- list(R = n, keep = keep)
 
-modelo <- rmnpGibbs(Data = Data1,
+modelo <- rmnpGibbs(Data = Data_mod,
                     Mcmc = Mcmc_params)
 
-
+head(simout$X)
 
 
 

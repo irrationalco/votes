@@ -1,0 +1,10 @@
+a,b,c,d,IVEI,Notas
+1,0,0,0,0,El IVEI debe de ser cero si el estado está perfectamente polarizado
+0,1,0,0,0,El IVEI debe de ser cero si el estado está perfectamente polarizado
+0,0,1,0,0,El IVEI debe de ser cero si el estado está perfectamente polarizado
+0,0,0,1,0,El IVEI debe de ser cero si el estado está perfectamente polarizado
+0.25,0.25,0.25,0.25,1,El IVEI debe de ser 1 si el estado es perfectamente homogeneo
+0.5,0.5,0,0,0.585786438,IVEI más alto porque hay posibilidad de cambio
+0.25,0.75,0,0,0.41886117,IVEI más bajo por polarización hacia un partido
+0.333333333,0.333333333,0.333333333,0,0.845299462,IVEI más alto porque hay posibilidad de cambio
+0.17747147,0.153496124,0.455525544,0.213506862,0.889782212,Super random por lo tanto IVEI alto
