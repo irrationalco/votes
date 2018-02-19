@@ -19,7 +19,11 @@ slice_index <- sample(1:dim(ind_vars)[1], size = dim(ind_vars)[1]*prob)
 train <- ind_vars[slice_index, ]
 test <- ind_vars[-slice_index, ]
 
-y <- inegi$GANADOR[slice_index]
+# Respuestas: para este ejemplo, CPAN es 1 CPRI es 2, CI1 - 3, Morena - 4
+y <- as.numeric(inegi$GANADOR[slice_index])
+levels(inegi$GANADOR[slice_index])
+head(y)
+head(inegi$GANADOR[slice_index])
 
 # Constuimos la matriz de diseño
 k <- length(unique(inegi$GANADOR)) # Número de Alternativas
@@ -36,8 +40,8 @@ X <- createX(p = k, na = na, nd = nd, Xa = NULL, Xd = train,
 
 # 3. Modelo
 # Setup Modelo
-n <-  10^1 # Número de Draws
-keep <-  1 # Thinning Param
+n <-  10^4 # Número de Draws
+keep <-  4 # Thinning Param, vale la pena ponerlo porque está horrible la autocorr.
 beta_0 <- NULL
 sigma_0 <- NULL 
 
@@ -46,9 +50,31 @@ Mcmc_params <- list(R = n, keep = keep)
 
 modelo <- rmnpGibbs(Data = Data_mod,
                     Mcmc = Mcmc_params)
+# Nota, el out te da los draws de la beta y la sigma. Sigma se es una wishart inversa, que es una matriz de covarianzas. 
 
-head(simout$X)
+# Por alguna razón, necesitas estandarizar los coefs antes de interpretarlos. 
+# Pta madre Jorge neceito el libro
+betatilde <- modelo$betadraw / sqrt(modelo$sigmadraw[,1])
+sigmatilde <- modelo$sigmadraw / sqrt(modelo$sigmadraw[,1])
 
+#Summarys de bayesM
+summary(betatilde) # wrapper para la función summary.bayesm.mat
+summary(sigmatilde)
 
+# Gráficas BayesM - Gracias a dios pensaron en est. Namas hay que ponerle los nombres a los coefs
+plot(betatilde) # wrapper para la función plot.bayesm.mat
+plot(sigmatilde)
 
+# Este tiene que ser mi output...
+# Esta función calcula las probabilidades con el método GHK de UNA OBSERVACIÓN PTA MADRE
 
+# Relativamente sencillo sacar betas finales
+beta_est <- apply(betatilde, 2, mean)
+
+# Maldita sea como lo acomodan
+sigma_est <- matrix(apply(sigmatilde, 2, mean), nrow = 3, ncol = 3)
+
+mnpProb(beta = beta_est, Sigma = sigma_est, X = X[1:3,])
+
+# Para todas las observaciones usando mi función
+probas <- mnpProb_multiObs(modeloMNP = modelo, X = X, burn_in = 1, r = 100, verbose = TRUE )
