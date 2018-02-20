@@ -1,5 +1,5 @@
-# Description
-# Reference keys useful for redistritaciones and stuff
+# Description: Reference keys useful for redistritaciones and stuff
+# Author: Mariana <mariana@irrational.ly>
 
 setwd('')
 options(scipen = 999)

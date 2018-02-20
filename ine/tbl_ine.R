@@ -1,5 +1,5 @@
-# Description
-# Summary table of historic (2009-2015) federal election votes.
+# Description: Summary table of historic (2009-2015) federal election votes.
+# Author: Mariana <mariana@irrational.ly>
 
 setwd('')
 options(scipen = 999)

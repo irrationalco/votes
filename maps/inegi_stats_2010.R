@@ -1,5 +1,5 @@
-# Description
-# Censo INEGI 2010 statistics
+# Description: Censo INEGI 2010 statistics
+# Author: Mariana <mariana@irrational.ly>
 
 setwd('')
 options(scipen = 999)

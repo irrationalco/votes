@@ -1,5 +1,5 @@
-# Description
-# Censo INEGI 2010 key
+# Description: Censo INEGI 2010 key
+# Author: Mariana <mariana@irrational.ly>
 
 setwd('')
 options(scipen = 999)

@@ -1,6 +1,5 @@
-# Description
-# Test with INE 2015 federal level shapefiles for Aguascalientes
-# https://cartografia.ife.org.mx/sige7/?distritacion=federal
+# Description: Test with INE 2015 federal level shapefiles for Aguascalientes (https://cartografia.ife.org.mx/sige7/?distritacion=federal)
+# Author: Mariana <mariana@irrational.ly>
 
 # Setup
 setwd('')
