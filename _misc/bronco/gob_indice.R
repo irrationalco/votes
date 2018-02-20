@@ -53,4 +53,4 @@ df <- y %>%
   arrange(ANO, ELECCION, CODIGO_ESTADO, SECCION)
 
 # WRITE
-write.csv(df, 'out/bronco.csv', row.names = F)
+fwrite.csv(df, 'out/bronco.csv', row.names = F)

@@ -11,7 +11,7 @@
 | PAN | Partido Acción Nacional |
 | PCC | Partico Cruzada Ciudadana |
 | PES | Partido Encuentro Nacional |
-| PH | Paritdo Humanista |
+| PH | Partido Humanista |
 | PMC | Movimiento Ciudadano |
 | PMOR | MORENA |
 | PRD | Partido de la Revolución Democrática |
@@ -24,3 +24,5 @@
 | PD | Partido Demócrata |
 | PNA | Partido Nueva Alianza |
 | PVEM | Partido Verde Ecologista de México |
+
+* *Propietary party in bold*

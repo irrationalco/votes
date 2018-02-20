@@ -1,5 +1,5 @@
-# Description
-# Summary table of historic (2009-2015) federal election votes.
+# Description: Summary table of historic (2009-2015) federal election votes.
+# Author: Mariana <mariana@irrational.ly>
 
 setwd('')
 options(scipen = 999)
@@ -54,7 +54,7 @@ dat <- left_join(a, b)
 #test <- subset(test, select = c(CODIGO_ESTADO, NOMBRE_MUNICIPIO, CODIGO_MUNICIPIO))
 #test <- unique(test[c('CODIGO_ESTADO', 'NOMBRE_MUNICIPIO', 'CODIGO_MUNICIPIO')])
 #sum(is.na(test[, c('CODIGO_MUNICIPIO')]))
-#write.csv(test, 'log/missing-city-codes.csv', row.names = F)
+#fwrite(test, 'log/missing-city-codes.csv', row.names = F)
 
 # TOTALS
   # Compute simple sum for each year
@@ -114,4 +114,4 @@ df <- tbl %>%
   arrange(ANO, ELECCION, CODIGO_ESTADO, SECCION)
 
 # WRITE
-write.csv(df, 'out/tbl_ine.csv', row.names = F)
+fwrite(df, 'out/tbl_ine.csv', row.names = F)

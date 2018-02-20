@@ -1,5 +1,5 @@
-# Description
-# Reference keys useful for redistritaciones and stuff
+# Description: Reference keys useful for redistritaciones and stuff
+# Author: Mariana <mariana@irrational.ly>
 
 setwd('')
 options(scipen = 999)
@@ -72,4 +72,4 @@ key <- z %>%
 	arrange(CODIGO_ESTADO, SECCION)
 
 # WRITE
-write.csv(key, 'out/key.csv', row.names = F)
+fwrite(key, 'out/key.csv', row.names = F)

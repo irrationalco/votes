@@ -1,5 +1,5 @@
-# Description
-# Censo INEGI 2010 statistics
+# Description: Censo INEGI 2010 statistics
+# Author: Mariana <mariana@irrational.ly>
 
 setwd('')
 options(scipen = 999)
@@ -64,4 +64,4 @@ inegi.sum.key <- inegi.sum %>%
     everything()
     ) %>%
   arrange(CODIGO_ESTADO, SECCION)
-write.csv(inegi.sum.key, 'out/stats_inegi_2010.csv', row.names = FALSE, quote = FALSE)
+fwrite(inegi.sum.key, 'out/stats_inegi_2010.csv', row.names = FALSE, quote = FALSE)

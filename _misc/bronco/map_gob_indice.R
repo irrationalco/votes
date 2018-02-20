@@ -38,5 +38,3 @@ m <- ggplot(z, aes(x = long, y = lat, group = group, fill = INDICE_VOLATILIDAD))
 png('viz/map_volatilidad_nl.png', res = 300, height = 8000, width = 5000) 
 plot(m) 
 dev.off()
-
-write.csv(map, 'out/test.csv', row.names = FALSE, quote = FALSE)
