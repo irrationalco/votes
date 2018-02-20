@@ -58,6 +58,7 @@ x <- left_join(ine, ife.inegi)
 y <- left_join(x, fed)
 z <- y
 
+# COLUMNS
 key <- z %>%
 	mutate(
 		DISTRITO_FEDERAL = DISTRITO_FEDERAL_2017,

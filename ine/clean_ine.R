@@ -1,4 +1,4 @@
-# Description: Create database with historic (2009-2015) federal election votes.
+# Description: Preprocess files containing historic (2009-2015) federal election records.
 # Author: Mariana <mariana@irrational.ly>
 
 setwd('')
@@ -122,7 +122,7 @@ mydat <- mydat %>%
     -PRI2, -PRD2, -PT2,
     -starts_with('COA'))
 
-# CLEAN
+# COLUMNS
 
   # More column clearing and lowercasing
 mydf <- subset(mydat,
@@ -133,9 +133,9 @@ mydf <- subset(mydat,
 mydf$NOMBRE_ESTADO <- cleanText(tolower(mydf$NOMBRE_ESTADO))
 mydf$NOMBRE_MUNICIPIO <- cleanText(tolower(mydf$NOMBRE_MUNICIPIO))
 
-  # Arrange columns
+  # Arrange and stuff
 df <- mydf %>%
-  select(noquote(order(colnames(mydf)))) %>%
+  select(noquote(order(colnames(.)))) %>%
   select(
     ANO, ELECCION, CODIGO_ESTADO, NOMBRE_ESTADO, NOMBRE_MUNICIPIO, DISTRITO_FEDERAL, SECCION, NOMINAL,
     everything()) %>%

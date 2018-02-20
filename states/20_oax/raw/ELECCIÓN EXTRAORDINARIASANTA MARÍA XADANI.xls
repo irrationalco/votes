@@ -1,0 +1,568 @@
+<html>
+<head>
+<title>Datos</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+
+</head>
+<body>
+
+<table border="1">
+<thead>
+
+<tr>
+
+<th>CASILLA</th>
+<th title="Lista Nominal">L_NOM</th>
+<th>ACTA</th>
+
+
+<th>
+<div style="padding-left:5px;"> 
+
+PAN
+</div>
+
+</th>
+<th>
+<div style="padding-left:5px;"> 
+
+PRI
+</div>
+
+</th>
+<th>
+<div style="padding-left:5px;"> 
+
+PRD
+</div>
+
+</th>
+<th>
+<div style="padding-left:5px;"> 
+
+PVEM
+</div>
+
+</th>
+<th>
+<div style="padding-left:5px;"> 
+
+PT
+</div>
+
+</th>
+<th>
+<div style="padding-left:5px;"> 
+
+PMC
+</div>
+
+</th>
+<th>
+<div style="padding-left:5px;"> 
+
+PUP
+</div>
+
+</th>
+<th>
+<div style="padding-left:5px;"> 
+
+MORENA
+</div>
+
+</th>
+<th>
+<div style="padding-left:5px;"> 
+
+PRS
+</div>
+
+</th>
+		<th>
+				
+        
+        		<div style="padding-left:5px;">
+			COALICION PRI PVEM   
+        </div>
+        
+        
+        
+        </th>
+		
+<th>
+NO_REG</th>
+
+<th>
+NULOS</th>
+
+<th>Votos</th>
+
+<th style="width:450px;">HASH</th>
+
+</tr>
+</thead>
+
+<tbody>
+  
+		<tr>
+
+
+
+
+<td>
+1929-BASICA</td>
+<td align="center">680</td>
+
+<td>
+<font color='#006600'>Acta Capturable</font>
+</td>
+
+		<td align="center">
+		1		</td>
+				<td align="center">
+		93		</td>
+				<td align="center">
+		0		</td>
+				<td align="center">
+		111		</td>
+				<td align="center">
+		1		</td>
+				<td align="center">
+		0		</td>
+				<td align="center">
+		8		</td>
+				<td align="center">
+		0		</td>
+				<td align="center">
+		251		</td>
+								<td align="center">
+                            4						</td>
+										<td align="center">
+				0				</td>
+								<td align="center">
+				2				</td>
+							<td align="center">
+			471            
+            </td>
+
+		<td>
+				25599065e2f96de0815cd6c6b602bfe5febe141bfe9811a3f192811ae6457919		</td>
+           
+            
+					<tr>
+
+
+
+
+<td>
+1929-CONTIGUA 1</td>
+<td align="center">680</td>
+
+<td>
+<font color='#006600'>Acta Capturable</font>
+</td>
+
+		<td align="center">
+		3		</td>
+				<td align="center">
+		77		</td>
+				<td align="center">
+		0		</td>
+				<td align="center">
+		136		</td>
+				<td align="center">
+		1		</td>
+				<td align="center">
+		0		</td>
+				<td align="center">
+		5		</td>
+				<td align="center">
+		2		</td>
+				<td align="center">
+		218		</td>
+								<td align="center">
+                            5						</td>
+										<td align="center">
+				0				</td>
+								<td align="center">
+				1				</td>
+							<td align="center">
+			448            
+            </td>
+
+		<td>
+				496e0f27ac790f85aca78e14d1d25b7b0e9c63aeef3f5d72921c0ea11305ff60		</td>
+           
+            
+					<tr>
+
+
+
+
+<td>
+1930-BASICA</td>
+<td align="center">561</td>
+
+<td>
+<font color='#006600'>Acta Capturable</font>
+</td>
+
+		<td align="center">
+		2		</td>
+				<td align="center">
+		79		</td>
+				<td align="center">
+		1		</td>
+				<td align="center">
+		77		</td>
+				<td align="center">
+		2		</td>
+				<td align="center">
+		2		</td>
+				<td align="center">
+		8		</td>
+				<td align="center">
+		1		</td>
+				<td align="center">
+		182		</td>
+								<td align="center">
+                            2						</td>
+										<td align="center">
+				0				</td>
+								<td align="center">
+				4				</td>
+							<td align="center">
+			360            
+            </td>
+
+		<td>
+				ec44aab0c8fcf96ba16cd039a2878f52fd0a71847806f7830f2cde235012014c		</td>
+           
+            
+					<tr>
+
+
+
+
+<td>
+1930-CONTIGUA 1</td>
+<td align="center">561</td>
+
+<td>
+<font color='#006600'>Acta Capturable</font>
+</td>
+
+		<td align="center">
+		0		</td>
+				<td align="center">
+		98		</td>
+				<td align="center">
+		0		</td>
+				<td align="center">
+		98		</td>
+				<td align="center">
+		0		</td>
+				<td align="center">
+		2		</td>
+				<td align="center">
+		0		</td>
+				<td align="center">
+		0		</td>
+				<td align="center">
+		183		</td>
+								<td align="center">
+                            2						</td>
+										<td align="center">
+				0				</td>
+								<td align="center">
+				0				</td>
+							<td align="center">
+			383            
+            </td>
+
+		<td>
+				8266d1039600d90cca2ebc2b35bc041794c3688791fcae4298d72f872f027220		</td>
+           
+            
+					<tr>
+
+
+
+
+<td>
+1930-CONTIGUA 2</td>
+<td align="center">561</td>
+
+<td>
+<font color='#006600'>Acta Capturable</font>
+</td>
+
+		<td align="center">
+		0		</td>
+				<td align="center">
+		90		</td>
+				<td align="center">
+		1		</td>
+				<td align="center">
+		105		</td>
+				<td align="center">
+		0		</td>
+				<td align="center">
+		2		</td>
+				<td align="center">
+		5		</td>
+				<td align="center">
+		0		</td>
+				<td align="center">
+		170		</td>
+								<td align="center">
+                            1						</td>
+										<td align="center">
+				0				</td>
+								<td align="center">
+				0				</td>
+							<td align="center">
+			374            
+            </td>
+
+		<td>
+				1c6507fe3c3e43510fbd03c47a75979398bcbda91b229af32844bcd75c5b4bfc		</td>
+           
+            
+					<tr>
+
+
+
+
+<td>
+1931-BASICA</td>
+<td align="center">506</td>
+
+<td>
+<font color='#006600'>Acta Capturable</font>
+</td>
+
+		<td align="center">
+		3		</td>
+				<td align="center">
+		58		</td>
+				<td align="center">
+		1		</td>
+				<td align="center">
+		101		</td>
+				<td align="center">
+		1		</td>
+				<td align="center">
+		1		</td>
+				<td align="center">
+		4		</td>
+				<td align="center">
+		1		</td>
+				<td align="center">
+		178		</td>
+								<td align="center">
+                            5						</td>
+										<td align="center">
+				0				</td>
+								<td align="center">
+				0				</td>
+							<td align="center">
+			353            
+            </td>
+
+		<td>
+				fc24b0cb57718cff1888afde243f244fa7bb2ffb37944fa5c78104dc7bb7b900		</td>
+           
+            
+					<tr>
+
+
+
+
+<td>
+1931-CONTIGUA 1</td>
+<td align="center">506</td>
+
+<td>
+<font color='#006600'>Acta Capturable</font>
+</td>
+
+		<td align="center">
+		0		</td>
+				<td align="center">
+		48		</td>
+				<td align="center">
+		2		</td>
+				<td align="center">
+		101		</td>
+				<td align="center">
+		0		</td>
+				<td align="center">
+		0		</td>
+				<td align="center">
+		7		</td>
+				<td align="center">
+		0		</td>
+				<td align="center">
+		193		</td>
+								<td align="center">
+                            0						</td>
+										<td align="center">
+				0				</td>
+								<td align="center">
+				2				</td>
+							<td align="center">
+			353            
+            </td>
+
+		<td>
+				dd96995c09d94c0ace9af60798064bdfbcec2dfac2b33914519d0393ec1343c1		</td>
+           
+            
+					<tr>
+
+
+
+
+<td>
+1931-CONTIGUA 2</td>
+<td align="center">506</td>
+
+<td>
+<font color='#006600'>Acta Capturable</font>
+</td>
+
+		<td align="center">
+		0		</td>
+				<td align="center">
+		49		</td>
+				<td align="center">
+		0		</td>
+				<td align="center">
+		111		</td>
+				<td align="center">
+		1		</td>
+				<td align="center">
+		0		</td>
+				<td align="center">
+		8		</td>
+				<td align="center">
+		1		</td>
+				<td align="center">
+		173		</td>
+								<td align="center">
+                            0						</td>
+										<td align="center">
+				0				</td>
+								<td align="center">
+				1				</td>
+							<td align="center">
+			344            
+            </td>
+
+		<td>
+				268e068e018e8b4dd18419b9278288c05f8335bc0955efb57f2b7be723825fa6		</td>
+           
+            
+					<tr>
+
+
+
+
+<td>
+1932-BASICA</td>
+<td align="center">572</td>
+
+<td>
+<font color='#006600'>Acta Capturable</font>
+</td>
+
+		<td align="center">
+		2		</td>
+				<td align="center">
+		70		</td>
+				<td align="center">
+		0		</td>
+				<td align="center">
+		141		</td>
+				<td align="center">
+		3		</td>
+				<td align="center">
+		1		</td>
+				<td align="center">
+		13		</td>
+				<td align="center">
+		3		</td>
+				<td align="center">
+		157		</td>
+								<td align="center">
+                            2						</td>
+										<td align="center">
+				0				</td>
+								<td align="center">
+				1				</td>
+							<td align="center">
+			393            
+            </td>
+
+		<td>
+				17efa5a67f2bb949d12b8755965c6f7ba454470e6d6b7f72329415ba1ade8590		</td>
+           
+            
+					<tr>
+
+
+
+
+<td>
+1932-CONTIGUA 1</td>
+<td align="center">572</td>
+
+<td>
+<font color='#006600'>Acta Capturable</font>
+</td>
+
+		<td align="center">
+		0		</td>
+				<td align="center">
+		77		</td>
+				<td align="center">
+		1		</td>
+				<td align="center">
+		112		</td>
+				<td align="center">
+		1		</td>
+				<td align="center">
+		1		</td>
+				<td align="center">
+		11		</td>
+				<td align="center">
+		0		</td>
+				<td align="center">
+		168		</td>
+								<td align="center">
+                            2						</td>
+										<td align="center">
+				0				</td>
+								<td align="center">
+				0				</td>
+							<td align="center">
+			373            
+            </td>
+
+		<td>
+				b27e5ad832a2129976f20e15f6cdc0672395b6ac54d02cbbfee2815d3630e19e		</td>
+           
+            
+			
+
+</tr>
+
+</tbody>
+</table>
+
+
+
+</body>
+</html>

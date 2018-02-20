@@ -1,9 +1,10 @@
-# Description: create database with 2012 - 2015 state (local deputy and mayoral) election votes.
+# Description: Database with historic (2012-2015) state election results for Nuevo León.
 # Author: Mariana <mariana@irrational.ly>
 
 setwd('')
 options(scipen = 999)
 require(data.table)
+require(doBy)
 require(dplyr)
 require(openxlsx)
 source('../../_misc/fun/general_fun.R')
@@ -64,8 +65,17 @@ z <- bind_rows(x, y3)
 z$CODIGO_ESTADO <- c(19)
 z$NOMBRE_ESTADO <- c('nuevo leon')
 
+# TOTALS
+sum <- summaryBy(
+    . ~ ANO + ELECCION + CODIGO_ESTADO + NOMBRE_ESTADO + NOMBRE_MUNICIPIO + DISTRITO_LOCAL_INE_2012 + DISTRITO_LOCAL_INE_2015 + SECCION,
+    data = z,
+    FUN = c(sum),
+    keep.names = TRUE,
+    na.rm = FALSE
+    )
+
 # COLUMNS
-dat <- z %>%
+dat <- sum %>%
     select(noquote(order(colnames(.)))) %>%
     select(
         ANO, ELECCION, CODIGO_ESTADO, NOMBRE_ESTADO, NOMBRE_MUNICIPIO,
@@ -75,4 +85,4 @@ dat <- z %>%
     arrange(ANO, ELECCION, SECCION)
 
 # WRITE
-fwrite(dat, 'out/tbl_19_nle.csv', row.names = F)
+fwrite(dat, 'out/tbl_19.csv', row.names = F)

@@ -1,4 +1,4 @@
-# Description: Summary table of historic (2009-2015) federal election votes.
+# Description: Database with historic (2009-2015) federal election results.
 # Author: Mariana <mariana@irrational.ly>
 
 setwd('')
@@ -25,6 +25,7 @@ dat <- data %>%
   as.data.frame
 
 # MISSING INFO
+
   # 1. State names and ids
 est <- dat %>% filter(ANO == 2009) %>% filter(ELECCION == 'dif') %>% select(CODIGO_ESTADO, NOMBRE_ESTADO)
 est <- unique(est[c('CODIGO_ESTADO', 'NOMBRE_ESTADO')]) 
@@ -45,10 +46,12 @@ mun <- mun[[2]][[2]][[3]][[2]]
 names(mun) <- c('CODIGO_ESTADO', 'CODIGO_MUNICIPIO', 'MUNICIPIO_RAW')
 mun$NOMBRE_MUNICIPIO <- cleanText(tolower(mun$MUNICIPIO_RAW))
 mun <- mun %>% select(-MUNICIPIO_RAW) %>% arrange(CODIGO_ESTADO, CODIGO_MUNICIPIO)
+    
     # Match
 a <- bind_rows(x, y, z)
 b <- mun
 dat <- left_join(a, b)
+    
     # Test
 #test <- subset(mun, is.na(mun$CODIGO_MUNICIPIO))
 #test <- subset(test, select = c(CODIGO_ESTADO, NOMBRE_MUNICIPIO, CODIGO_MUNICIPIO))
@@ -57,6 +60,7 @@ dat <- left_join(a, b)
 #fwrite(test, 'log/missing-city-codes.csv', row.names = F)
 
 # TOTALS
+
   # Compute simple sum for each year
 s1 <- dat %>% filter(ANO == 2009)
 sum1 <- summaryBy(
@@ -98,13 +102,14 @@ unq <- bind_rows(unq1, unq2, unq3)
 unq <- unq %>% select(ANO, ELECCION, CODIGO_ESTADO, NOMBRE_ESTADO, CODIGO_MUNICIPIO, NOMBRE_MUNICIPIO, SECCION)
 
 # TABLE
+
   # Join votes with these columns
 tbl <- left_join(sum, unq)
 
   # Replace NaNs with NAs
 tbl[tbl == 'NaN'] = NA
 
-  # Clean
+# COLUMNS
 df <- tbl %>%
   select(order(colnames(.))) %>%
   select(
