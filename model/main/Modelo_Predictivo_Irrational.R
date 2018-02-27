@@ -33,6 +33,17 @@ elec <- "prs"   # Elección para seleccionar la respuesta
 # prs-2012
 # dif-2015
 
+#0.3.3 Pesos para las diferentes combinaciones de elecciones
+# El orden de las eleciones queda con sus pesos:
+# dif-2009 - .05
+# dif-2012 - .1
+# dif-2015 - .3 - Más reciente
+# prs-2012 - .45 - Más relevante
+# sen-2012 - .1 - Meh
+
+w <- c(.05,.1,.3,.45,.1)
+
+
 # 0.3.3 Parámetros FASE 1
 p <- 2  # Norma para el IVEI
 
