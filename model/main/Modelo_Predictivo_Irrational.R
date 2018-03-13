@@ -52,11 +52,11 @@ w <- list("1" = c(1),
 p <- 2  # Norma para el IVEI
 
 # 0.3.4 Parametros para mnpGibbs
-draws <- 10^5 # Número de Draws para el modelo
-thin <- 4 # Thinning parameter
+draws <- 10^3 # Número de Draws para el modelo
+thin <- 1 # Thinning parameter
 
 # 0.3.5 Parámetros para la función mnpProb_multiObs
-burn_in <- 1000 # Datos por descartar
+burn_in <- 100 # Datos por descartar
 tipo_resumen <- "mean" # Puede ser mean, median o mode
 r <- 100
 verb <- TRUE
@@ -202,26 +202,26 @@ modelo <- rmnpGibbs(Data = Data_mod, Mcmc = Mcmc_params)
 
 #-------------------------------------------------------------------------------
 # 5. RESULTADOS
-# 
-# probs <- mnpProb_multiObs(modelo, X, burn_in, type = tipo_resumen, r = r, verbose = verb)
-# colnames(probs) <- levels(respuestas) 
-# final <- data.frame(CODE = code_final, probs)
-# write.csv(probs, "out/PrediccionesSeccion.csv", row.names = FALSE)
-# 
-# #-------------------------------------------------------------------------------
-# # 6. ANÁLISIS
-# #
-# # 6.1 Analizamos las cadenas de markov pero primero identificamos parámetros
+
+probs <- mnpProb_multiObs(modelo, X, burn_in, type = tipo_resumen, r = r, verbose = verb)
+colnames(probs) <- levels(respuestas)
+probs <- data.frame(CODE = tabla_final$CODE, probs, RESPUESTA_REAL = tabla_final$repuestas)
+write.csv(probs, "out/PrediccionesSeccion.csv", row.names = FALSE)
+
+#-------------------------------------------------------------------------------
+# 6. ANÁLISIS
+
+# 6.1 Analizamos las cadenas de markov pero primero identificamos parámetros
 # betatilde <- modelo$betadraw / sqrt(modelo$sigmadraw[,1])
 # sigmatilde <- modelo$sigmadraw / sqrt(modelo$sigmadraw[,1])
-# 
+
 # #Summarys y plots de bayesM
-# summary(betatilde) 
+# summary(betatilde)
 # summary(sigmatilde)
 # plot(betatilde)
 # plot(sigmatilde)
-# 
-# # 6.2 Análisis de convergencia
-# 
-# #-------------------------------------------------------------------------------
-# # 7. Precisión y Cross Validation
+
+# 6.2 Análisis de convergencia
+
+#-------------------------------------------------------------------------------
+# 7. Precisión y Cross Validation

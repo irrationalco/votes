@@ -1,6 +1,6 @@
 mnpProb_multiObs <- function(modeloMNP, X, burn_in = 1, 
                              type = "mean", r = 100, verbose = TURE){
-    # Macro para la función de mnpGibbs y mnpProb de BayesM de Rossi
+    # Función para la mnpGibbs y mnpProb de BayesM de Rossi
     # Calcula las probabilidades de un MNP Gibbs para multiples observaciones
     # Se usa directamente con los objetos del out de la simulación por mnp
     #
