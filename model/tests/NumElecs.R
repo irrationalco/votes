@@ -21,7 +21,7 @@ datos[datos$SECCION %in% malos, ]
 # Conclusión:
 # n = 1 no hay pedo
 # n = 3 solo tienen los 3 del 2012.
-# n = 3 hay de todo... Tanto 2009 + 2012 como 2012 + 2015
+# n = 4 hay de todo... Tanto 2009 + 2012 como 2012 + 2015
 # n = 5 :) Happy days
 # ie: Necesito pensar como hacer el algoritmo de multiplicación de matrices
 

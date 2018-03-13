@@ -9,7 +9,8 @@
 # Todo debe de llevar su key, tanto IBV como CVIi como y para no caer en broncas de dimensionalidad
 # 3. IBV:= Individual Based Variables, una sola matriz de n_IBV columnas (cada columna es una variable), con su correspondiente codigo
 # 4. CBVi:= Choice Based Variable i, matriz que contiene una sola CBV (ie: cada CBV tiene la suya) el número de colúmnas debe de ser igual a k
-# 5. CODE:= Código de identificación de filas único (para n). KEY: para las categorías (para k)
+# 5. CODE:= ID:= Código de identificación de filas único (para n). 
+# 6. KEY: para las categorías (para k) (Para codificación y referencia de categorías)
 
 #-------------------------------------------------------------------------------
 # 0. PREAMBLE
@@ -24,7 +25,7 @@ source("funcs/fase1/Fase1.R")
 
 # 0.3 Parámetros Globales
 
-# 0.3.2 Parámetros para Respuestas
+# 0.3.2 Parámetros para Respuestas, ganador de las siguientes elecciones.
 ano <- 2012 # Año por selecionar la respuesta
 elec <- "prs"   # Elección para seleccionar la respuesta 
 # Combinaciones posibles:
@@ -41,7 +42,6 @@ elec <- "prs"   # Elección para seleccionar la respuesta
 # dif-2015 - .3 - Más reciente
 # prs-2012 - .45 - Más relevante
 # sen-2012 - .1 - Meh
-
 w <- list("1" = c(1), 
           "2" = NULL,
           "3" = c(.1, .7,.2), 
@@ -67,8 +67,10 @@ verb <- TRUE
 # Importar todas las bases de datos que se encuentren en la carpeta IN
 # 1.1 Datos INEGI
 inegi <- read.csv("in/inegi/stats_inegi_2010.csv")
-IBV <- inegi %>% select(HIJOS, ANALFABETISMO, EDUCACION_AV, NO_SERV_SALUD, AUTO) %>% scale()
-IBV_code <- with(inegi, paste(CODIGO_ESTADO, CODIGO_MUNICIPIO_IFE_2010, SECCION, sep = "-"))
+# Se puden escoger variables diferentes. Yo lo hice asi porque con el paquete MNP eran las mejores
+features <- c("HIJOS", "ANALFABETISMO", "EDUCACION_AV", "NO_SERV_SALUD", "AUTO")
+IBV <- inegi %>% select(features) %>% scale()
+IBV_code <- with(inegi, paste(CODIGO_ESTADO, CODIGO_MUNICIPIO_INEGI_2010, SECCION, sep = "-"))
 
 # Votos
 ine <- read.csv("in/ine/tbl_ine.csv")
@@ -77,7 +79,7 @@ ine <- read.csv("in/ine/tbl_ine.csv")
 # Encuestas
 
 #-------------------------------------------------------------------------------
-# 2. RESPUESTAS
+# 2. RESPUESTAS Y's
 
 # 2.1 Sacamos las respuestas y de la elección que queramos
 # Por lo pronto, selecciono todas, pero valdría la pena agregar algúnas para tener una categoría, OTROS e INDEP
@@ -93,16 +95,22 @@ y_code <- with(ine_filter,paste(CODIGO_ESTADO, CODIGO_MUNICIPIO, SECCION, sep = 
 # 2.2 Hacemos el relevel 
 # Por ahora, dejamos como base al PRI, PAN, PMC, PNA, PRD, PT, PVEM, NO_REG
 levels(respuestas)
+# Se puede cambiar este vector para escoger otros partidos que se considerern relevantes. Pero hay que tomar en cuenta datos faltantes.
 partidos <- c("PRI", "PAN", "PRD", "PMC", "PNA", "PT", "PVEM", "NO_REG")
+# Whishlist, hacer esto por sección ie: que la cat. base sea el ganador de cada sección
 respuestas <- factor(respuestas, levels = partidos)
 k <- nlevels(respuestas)
+
+# Hacemos las respuestas
+y <- as.integer(respuestas)
 key_respuestas <- data.frame(PARTIDOS = levels(respuestas), CODE = 1:k)
 write.csv(key_respuestas, "out/Key_Respuestas.csv", row.names = FALSE)
+# Recordando, Code son filas y Key son "Columnas-ish"
 
 #-------------------------------------------------------------------------------
 # 3. FASE-1
 # 
-# En la FASE 1, transformarmos los datos de votos y encuestas en choice based variables (ie: que haya un dato para cada una de las posibles respuestas que a la vez son los nombres de las columnas) notemos que deben existir exactamente K opciones para que funcione el modelo.
+# En la FASE 1, transformarmos los datos de votos y encuestas en choice based variables (ie: que haya un dato para cada una de las posibles respuestas que a la vez son los nombres de las columnas - Mariana: osease, ) notemos que deben existir exactamente K opciones para que funcione el modelo.
 
 temp <- with(ine, data.frame(CODE = paste(CODIGO_ESTADO, CODIGO_MUNICIPIO, SECCION, sep = "-"), ELECCION = paste(ELECCION, ANO, sep = "-")))
 
@@ -148,61 +156,72 @@ head(CBV1_afinidad)
 CBV1_afinidad_code <- unique(ine_pre_afinidad$CODE)
 
 # De paso calculamos el IVEI por localidad (podríamos meterlo al modelo pero sería repetir info)
-IVEI <- IVEI(CBV1_afinidad, p = 2) 
-hist(IVEI)
-summary(IVEI)
-write.csv(IVEI, "out/IVEI_Sección.csv", row.names = FALSE)
+IVEI_data <- as.tibble(data.frame(CODE = gsub("-", replacement = "/", CBV1_afinidad_code),IVEI = IVEI(CBV1_afinidad, p = 2)))
+hist(IVEI_data$IVEI, main = "Índice de Volatilidad Electoral Irrational Co.")
+summary(IVEI_data$IVEI)
+write.csv(IVEI_data, "out/IVEI_Sección.csv", row.names = FALSE)
 
 #-------------------------------------------------------------------------------
 # 4. FASE-2 - MNP BayesM
 #
 # 1.1 Hacer sentido de las dimensiones y hacer final key (n final)
-code_final <- # Será el "minimo" posible de las n_y, n_IBV y n_CBVi
-    # Con este subseteamos sus respectivos datos
-    
-    y <- as.numeric()
-Xa <- cbind()
-Xd <- IBV
+
+tabla_y <- data.frame(CODE = y_code, repuestas = respuestas, y = y)
+tabla_IBV <- data.frame(CODE = IBV_code,  IBV)
+tabla_CBV <- data.frame(CODE = CBV1_afinidad_code,  CBV1_afinidad)
+tabla_final <- tabla_y %>% left_join(tabla_IBV)
+tabla_final <- tabla_final %>% left_join(tabla_CBV)
+
+# Vemos cuantos jalan
+sum(complete.cases(tabla_final))
+tabla_malos <- tabla_final[!complete.cases(tabla_final), ] 
+tabla_final <- tabla_final[complete.cases(tabla_final), ] 
+
+write.csv(tabla_final, "out/ModeloIrrational.csv", row.names = FALSE)
+
+Xa <- as.matrix(tabla_final %>% select(partidos))
+Xd <- as.matrix(tabla_final %>% select(features))
 
 # 1.2 Construcción de matrices de diseño
-na <- 0 # de choice-specific
-nd <- ncol(IBV) # de individual-specific 
+na <- 1 # de choice-specific
+nd <- ncol(Xd) # de individual-specific 
 
 # En el Xa ira un cbind de todas las matrices
-X <- createX(p = k, na = na, nd = nd, Xa = NULL, Xd = IBV, 
+X <- createX(p = k, na = na, nd = nd, Xa = Xa, Xd = Xd, 
              INT = FALSE, DIFF = TRUE, base = 1)
+dim(X)
 
 # Priors Modelo
 beta_0 <- NULL
 sigma_0 <- NULL 
 
-Data_mod <- list(y = y, X = X, p = k)
+Data_mod <- list(y = tabla_final$y, X = X, p = k)
 Mcmc_params <- list(R = draws, keep = thin)
 
 modelo <- rmnpGibbs(Data = Data_mod, Mcmc = Mcmc_params)
 
 #-------------------------------------------------------------------------------
 # 5. RESULTADOS
-
-probs <- mnpProb_multiObs(modelo, X, burn_in, type = tipo_resumen, r = r, verbose = verb)
-colnames(probs) <- levels(respuestas) 
-final <- data.frame(CODE = code_final, probs)
-write.csv(probs, "out/PrediccionesSeccion.csv", row.names = FALSE)
-
-#-------------------------------------------------------------------------------
-# 6. ANÁLISIS
-#
-# 6.1 Analizamos las cadenas de markov pero primero identificamos parámetros
-betatilde <- modelo$betadraw / sqrt(modelo$sigmadraw[,1])
-sigmatilde <- modelo$sigmadraw / sqrt(modelo$sigmadraw[,1])
-
-#Summarys y plots de bayesM
-summary(betatilde) 
-summary(sigmatilde)
-plot(betatilde)
-plot(sigmatilde)
-
-# 6.2 Análisis de convergencia
-
-#-------------------------------------------------------------------------------
-# 7. Precisión y Cross Validation
+# 
+# probs <- mnpProb_multiObs(modelo, X, burn_in, type = tipo_resumen, r = r, verbose = verb)
+# colnames(probs) <- levels(respuestas) 
+# final <- data.frame(CODE = code_final, probs)
+# write.csv(probs, "out/PrediccionesSeccion.csv", row.names = FALSE)
+# 
+# #-------------------------------------------------------------------------------
+# # 6. ANÁLISIS
+# #
+# # 6.1 Analizamos las cadenas de markov pero primero identificamos parámetros
+# betatilde <- modelo$betadraw / sqrt(modelo$sigmadraw[,1])
+# sigmatilde <- modelo$sigmadraw / sqrt(modelo$sigmadraw[,1])
+# 
+# #Summarys y plots de bayesM
+# summary(betatilde) 
+# summary(sigmatilde)
+# plot(betatilde)
+# plot(sigmatilde)
+# 
+# # 6.2 Análisis de convergencia
+# 
+# #-------------------------------------------------------------------------------
+# # 7. Precisión y Cross Validation
