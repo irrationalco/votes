@@ -35,7 +35,8 @@ elec <- "prs"   # Elección para seleccionar la respuesta
 # prs-2012
 # dif-2015
 
-#0.3.3 Pesos para las diferentes combinaciones de elecciones
+#0.3.3 Pesos para las diferentes combinaciones de elecciones.
+# Si se agregan más elecciones tener cuidado o ver que plan con estos pesos
 # El orden de las eleciones queda con sus pesos: 
 # dif-2009 - .05
 # dif-2012 - .1
@@ -176,7 +177,6 @@ tabla_final <- tabla_final %>% left_join(tabla_CBV)
 sum(complete.cases(tabla_final))
 tabla_malos <- tabla_final[!complete.cases(tabla_final), ] 
 tabla_final <- tabla_final[complete.cases(tabla_final), ] 
-
 write.csv(tabla_final, "out/ModeloIrrational.csv", row.names = FALSE)
 
 Xa <- as.matrix(tabla_final %>% select(partidos))
@@ -191,14 +191,21 @@ X <- createX(p = k, na = na, nd = nd, Xa = Xa, Xd = Xd,
              INT = FALSE, DIFF = TRUE, base = 1)
 dim(X)
 
-# Priors Modelo
+# Valores iniciales Modelo
 beta_0 <- NULL
 sigma_0 <- NULL 
 
+# Priors Modelo
+betabar <- rep(0, times = (k-1)*nd + na) 
+A <- diag((k-1)*nd + na) # HAcemos esta modificación porqe por default es: 0.01*diag() y nos dijo Jim que es mejor centrar todo (nos lleva a un problema de que las betas son N(0,100) porque es la inversa)
+nu <- k-1+3
+V <- nu*diag(k-1)
+
 Data_mod <- list(y = tabla_final$y, X = X, p = k)
+Prior_mod = list(betabar, A, nu, V) # Opcional
 Mcmc_params <- list(R = draws, keep = thin)
 
-modelo <- rmnpGibbs(Data = Data_mod, Mcmc = Mcmc_params)
+modelo <- rmnpGibbs(Data = Data_mod, Mcmc = Mcmc_params, Prior = Prior_Mod)
 
 #-------------------------------------------------------------------------------
 # 5. RESULTADOS
@@ -208,18 +215,25 @@ colnames(probs) <- levels(respuestas)
 probs <- data.frame(CODE = tabla_final$CODE, probs, RESPUESTA_REAL = tabla_final$repuestas)
 write.csv(probs, "out/PrediccionesSeccion.csv", row.names = FALSE)
 
+# Estimamos accuracy-ish
+temp <- probs %>% select(partidos)
+resp_mod <- factor(colnames(temp[ , ])[max.col(temp[ , ], ties.method = "random")])
+accurracy <- sum(as.integer(tabla_final$repuestas) == as.integer(resp_mod))/length(tabla_final$repuestas)
+rm(temp)
+cat("Acurracy del modelo (in sample) con", dim(tabla_final)[1], "observaciones:", acurray*100, "%")
+
 #-------------------------------------------------------------------------------
 # 6. ANÁLISIS
 
 # 6.1 Analizamos las cadenas de markov pero primero identificamos parámetros
-# betatilde <- modelo$betadraw / sqrt(modelo$sigmadraw[,1])
-# sigmatilde <- modelo$sigmadraw / sqrt(modelo$sigmadraw[,1])
+betatilde <- modelo$betadraw / sqrt(modelo$sigmadraw[,1])
+sigmatilde <- modelo$sigmadraw / sqrt(modelo$sigmadraw[,1])
 
 # #Summarys y plots de bayesM
-# summary(betatilde)
-# summary(sigmatilde)
-# plot(betatilde)
-# plot(sigmatilde)
+summary(betatilde)
+summary(sigmatilde)
+plot(betatilde)
+plot(sigmatilde)
 
 # 6.2 Análisis de convergencia
 
