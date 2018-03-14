@@ -202,10 +202,10 @@ nu <- k-1+3
 V <- nu*diag(k-1)
 
 Data_mod <- list(y = tabla_final$y, X = X, p = k)
-Prior_mod = list(betabar, A, nu, V) # Opcional
+Prior_mod = list(beatbar = betabar, A = A, nu = nu, V = V) # Opcional
 Mcmc_params <- list(R = draws, keep = thin)
 
-modelo <- rmnpGibbs(Data = Data_mod, Mcmc = Mcmc_params, Prior = Prior_Mod)
+modelo <- rmnpGibbs(Data = Data_mod, Mcmc = Mcmc_params, Prior = Prior_mod)
 
 #-------------------------------------------------------------------------------
 # 5. RESULTADOS
