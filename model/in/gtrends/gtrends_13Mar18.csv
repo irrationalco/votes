@@ -1,0 +1,33 @@
+STATE,PAN,PRI,PRD/PMOR,INDEPENDENT1,INDEPENDENT2
+Tabasco,10,13,100,5,
+Chiapas,7,14,66,3,<1
+Campeche,5,18,61,3,
+Guerrero,7,10,60,4,
+Oaxaca,7,13,59,3,<1
+Ciudad de México,12,21,58,7,1
+Veracruz,10,14,57,6,1
+Morelos,8,16,54,4,1
+Puebla,9,12,53,5,<1
+Sonora,7,15,53,4,1
+Yucatán,9,14,50,6,<1
+Sinaloa,8,12,50,5,<1
+Hidalgo,11,16,48,5,<1
+Tamaulipas,11,13,48,5,1
+San Luis Potosí,8,16,47,5,1
+Querétaro,17,14,46,7,1
+Colima,7,15,45,3,
+Durango,8,12,44,5,
+Baja California Sur,9,13,44,3,1
+Aguascalientes,11,14,41,8,1
+Estado de México,8,13,41,4,<1
+Nayarit,9,11,39,2,
+Tlaxcala,10,10,39,4,
+Quintana Roo,7,11,38,4,<1
+Michoacán,6,11,38,5,<1
+Jalisco,7,11,38,5,1
+Chihuahua,9,11,36,4,<1
+Nuevo León,9,13,36,5,6
+Coahuila de Zaragoza,8,10,36,4,1
+Baja California,9,9,35,4,<1
+Zacatecas,7,13,34,2,<1
+Guanajuato,9,10,32,4,<1
