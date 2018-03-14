@@ -53,7 +53,7 @@ w <- list("1" = c(1),
 p <- 2  # Norma para el IVEI
 
 # 0.3.4 Parametros para mnpGibbs
-draws <- 10^3 # Número de Draws para el modelo
+draws <- 10^4 # Número de Draws para el modelo
 thin <- 1 # Thinning parameter
 
 # 0.3.5 Parámetros para la función mnpProb_multiObs
